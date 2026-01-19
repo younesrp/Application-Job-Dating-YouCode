@@ -6,11 +6,11 @@ namespace App\config;
 
 // use App\config\config;
 // database config
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'AppJobDating');
-define('DB_USER', 'root');
-define('DB_PASS', '');
-define('DB_CHARSET', 'utf8mb4');
+// define('DB_HOST', 'localhost');
+// define('DB_NAME', 'AppJobDating');
+// define('DB_USER', 'root');
+// define('DB_PASS', '');
+// define('DB_CHARSET', 'utf8mb4');
 
 // Session
 // Configuration des sessions sécurisées
