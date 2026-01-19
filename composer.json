@@ -2,7 +2,7 @@
     "name": "lenovo/application-job-dating-you-code",
     "autoload": {
         "psr-4": {
-            "Lenovo\\ApplicationJobDatingYouCode\\": "src/"
+            "App\\": "app/"
         }
     },
     "authors": [
@@ -11,5 +11,7 @@
             "email": "outergamoustafa@gmail.com"
         }
     ],
-    "require": {}
+    "require": {
+        "twig/twig": "^3.22"
+    }
 }
