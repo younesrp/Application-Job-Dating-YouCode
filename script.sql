@@ -1,80 +1,74 @@
 CREATE DATABASE job_dating_youcode;
 USE job_dating_youcode;
 
-CREATE TABLE roles (
-    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(50) UNIQUE NOT NULL
-);
-INSERT INTO roles (name) VALUES ('admin'), ('apprenant');
-
 CREATE TABLE users (
-    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    role_id INT NOT NULL,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(150) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
-    last_login TIMESTAMP NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_user_role
-        FOREIGN KEY (role_id)
-        REFERENCES roles(id)
+    role ENUM('admin','apprenant') NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+CREATE TABLE admins (
+    user_id INT PRIMARY KEY,
 
-CREATE TABLE students (
-    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    user_id INT UNIQUE NOT NULL,
-    first_name VARCHAR(100),
-    last_name VARCHAR(100),
-    promotion VARCHAR(50),
-    specialization VARCHAR(100),
-    CONSTRAINT fk_student_user
+    CONSTRAINT fk_admin_user
         FOREIGN KEY (user_id)
         REFERENCES users(id)
         ON DELETE CASCADE
 );
+CREATE TABLE apprenants (
+    user_id INT PRIMARY KEY,
+    nom VARCHAR(100),
+    prenom VARCHAR(100),
+    promotion VARCHAR(50),
+    specialisation VARCHAR(100),
 
-CREATE TABLE companies (
-    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(150) NOT NULL,
-    sector VARCHAR(100),
-    location VARCHAR(150),
+    CONSTRAINT fk_apprenant_user
+        FOREIGN KEY (user_id)
+        REFERENCES users(id)
+        ON DELETE CASCADE
+);
+CREATE TABLE entreprises (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nom VARCHAR(150) NOT NULL,
+    secteur VARCHAR(100),
+    ville VARCHAR(100),
     email VARCHAR(150) UNIQUE NOT NULL,
-    phone VARCHAR(30),
-    avatar VARCHAR(255),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    telephone VARCHAR(30),
+    logo VARCHAR(255)
 );
-
-CREATE TABLE job_offers (
-    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    title VARCHAR(200) NOT NULL,
-    company_id INT NOT NULL,
-    contract_type VARCHAR(50),
-    location VARCHAR(150),
-    image VARCHAR(255),
+CREATE TABLE annonces (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    entreprise_id INT NOT NULL,
+    titre VARCHAR(200) NOT NULL,
     description TEXT,
-    deleted BOOLEAN DEFAULT FALSE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NULL,
-    CONSTRAINT fk_offer_company
-        FOREIGN KEY (company_id)
-        REFERENCES companies(id)
-        ON DELETE RESTRICT
-);
+    image VARCHAR(255),
+    type_contrat VARCHAR(50),
+    competences TEXT,
+    date_creation DATETIME DEFAULT CURRENT_TIMESTAMP,
+    date_modification DATETIME NULL,
+    is_deleted BOOLEAN DEFAULT FALSE,
 
-CREATE TABLE skills (
-    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) UNIQUE NOT NULL
+    CONSTRAINT fk_annonce_entreprise
+        FOREIGN KEY (entreprise_id)
+        REFERENCES entreprises(id)
+        ON DELETE CASCADE
 );
+CREATE TABLE candidatures (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    apprenant_id INT NOT NULL,
+    annonce_id INT NOT NULL,
+    date_candidature DATETIME DEFAULT CURRENT_TIMESTAMP,
+    message TEXT,
+    statut ENUM('en_attente','validee','refusee') DEFAULT 'en_attente',
 
-CREATE TABLE job_offer_skills (
-    job_offer_id INT NOT NULL,
-    skill_id INT NOT NULL,
-    PRIMARY KEY (job_offer_id, skill_id),
-    CONSTRAINT fk_jos_offer
-        FOREIGN KEY (job_offer_id)
-        REFERENCES job_offers(id)
+    CONSTRAINT fk_candidature_apprenant
+        FOREIGN KEY (apprenant_id)
+        REFERENCES apprenants(user_id)
         ON DELETE CASCADE,
-    CONSTRAINT fk_jos_skill
-        FOREIGN KEY (skill_id)
-        REFERENCES skills(id)
+
+    CONSTRAINT fk_candidature_annonce
+        FOREIGN KEY (annonce_id)
+        REFERENCES annonces(id)
         ON DELETE CASCADE
 );
