@@ -1,7 +1,7 @@
 <?php
 
-namespace App\app\core;
-use App\app\core\{View,Validator,Security,Session}; // ✅ Validator
+namespace App\core;
+use App\core\{View,Validator,Security,Session}; // ✅ Validator
 class BaseController
 {
 
