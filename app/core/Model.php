@@ -112,7 +112,7 @@ abstract class BaseModel {
 
 // <?php
 
-// namespace App\app\core;
+// namespace App\core;
 
 // use PDO;
 
