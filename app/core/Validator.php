@@ -5,6 +5,12 @@ class Validator
 {
     private $errors = [];
     private $data = [];
+    private $security;
+
+    public function __construct()
+    {
+        $this->security = new Security();
+    }
 
     /**
      * Valide les données selon les règles
@@ -44,8 +50,38 @@ class Validator
                 break;
 
             case 'email':
-                if (!filter_var($value, FILTER_VALIDATE_EMAIL)) {
+                if (!$this->security->validateEmail($value)) {
                     $this->addError($field, "Le champ {$field} doit être un email valide");
+                }
+                break;
+
+            case 'password':
+                if (!$this->security->validatePassword($value)) {
+                    $this->addError($field, $this->security->getPasswordValidationError($value));
+                }
+                break;
+
+            case 'url':
+                if (!$this->security->validateUrl($value)) {
+                    $this->addError($field, "Le champ {$field} doit être une URL valide");
+                }
+                break;
+
+            case 'ip':
+                if (!$this->security->validateIP($value)) {
+                    $this->addError($field, "Le champ {$field} doit être une adresse IP valide");
+                }
+                break;
+
+            case 'integer':
+                if (!$this->security->validateInteger($value)) {
+                    $this->addError($field, "Le champ {$field} doit être un nombre entier");
+                }
+                break;
+
+            case 'float':
+                if (!$this->security->validateFloat($value)) {
+                    $this->addError($field, "Le champ {$field} doit être un nombre valide");
                 }
                 break;
 
@@ -95,12 +131,6 @@ class Validator
                     }
                 }
                 break;
-
-            case 'url':
-                if (!filter_var($value, FILTER_VALIDATE_URL)) {
-                    $this->addError($field, "Le champ {$field} doit être une URL valide");
-                }
-                break;
         }
     }
 
@@ -140,6 +170,47 @@ class Validator
             return $stmt->fetchColumn() > 0;
         } catch (\Exception $e) {
             return false;
+        }
+    }
+
+    /**
+     * Nettoie les données selon les règles de sanitisation
+     */
+    public function sanitize(array $data, array $sanitizeRules = []): array
+    {
+        $sanitized = [];
+
+        foreach ($data as $field => $value) {
+            if (empty($sanitizeRules[$field])) {
+                // Sanitisation par défaut
+                $sanitized[$field] = $this->security->sanitize($value);
+            } else {
+                $rule = $sanitizeRules[$field];
+                $sanitized[$field] = $this->applySanitization($value, $rule);
+            }
+        }
+
+        return $sanitized;
+    }
+
+    /**
+     * Applique une règle de sanitisation
+     */
+    private function applySanitization($value, string $rule)
+    {
+        switch ($rule) {
+            case 'string':
+                return $this->security->sanitize($value);
+            case 'email':
+                return $this->security->sanitizeEmail($value);
+            case 'url':
+                return $this->security->sanitizeUrl($value);
+            case 'integer':
+                return filter_var($value, FILTER_SANITIZE_NUMBER_INT);
+            case 'float':
+                return filter_var($value, FILTER_SANITIZE_NUMBER_FLOAT);
+            default:
+                return $this->security->sanitize($value);
         }
     }
 
