@@ -1,8 +1,6 @@
 <?php
-namespace App\app\core;
-use App\app\core\Database;
-use App\app\core\Security;
-
+namespace App\core;
+use App\core\Database;
 class Validator
 {
     private $errors = [];

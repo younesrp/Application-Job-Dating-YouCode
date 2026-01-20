@@ -1,6 +1,6 @@
 <?php
-namespace App\app\controllers;
-use App\app\core\{BaseController,Security,Session,Validator};
+namespace App\controllers;
+use App\core\{BaseController,Security,Session,Validator};
 
 // use App\models\User;
 

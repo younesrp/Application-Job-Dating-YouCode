@@ -1,8 +1,8 @@
 <?php
 
-namespace App\app\models;
+namespace App\models;
 
-use App\app\core\BaseModel;
+use App\core\BaseModel;
 
 class User extends BaseModel
 {

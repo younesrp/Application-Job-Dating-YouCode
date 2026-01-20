@@ -1,14 +1,19 @@
 <?php
-
-// root dyal projet: AppJobDating
-//define('BASE_PATH', dirname(__DIR__));
-
 // composer autoload
-require_once __DIR__ . '/../../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
-use App\app\core\Router;
-use App\app\controllers\AuthController;
-use App\app\Middlewares\{Middleware, AuthMiddleware,EtudiantMiddleware, AdminMiddleware};
+// تحميل الإعدادات من ملف .env
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../'); // حدد المسار الذي يوجد فيه ملف .env
+$dotenv->load();
+
+//echo "<pre>";
+//print_r($_ENV['DB_NAME']); //job_dating_youcode
+//echo "</pre>";
+//die();
+
+use App\core\Router;
+use App\controllers\AuthController;
+use App\Middlewares\{Middleware,EtudiantMiddleware};
 $router = new Router();
 
 /**

@@ -1,9 +1,15 @@
 <?php
-namespace App\app\core;
+namespace App\core;
 
  
-// (constants) .env
-require_once __DIR__ . '/../../.env';
+/**     (constants) .env
+*       composer require vlucas/phpdotenv that get envirement variables on .env not using phpdotenv library
+*       require_once __DIR__ . '/../../.env';
+*          or
+*       use Dotenv\Dotenv;
+*/
+use Dotenv\Dotenv;
+
 // global class f php
 use PDO;
 use PDOException;
@@ -17,6 +23,8 @@ class Database{
      * Constructeur privé pour empêcher l'instanciation directe
      */
     private function __construct() {
+        $dotenv = Dotenv::createImmutable(__DIR__ . '/../../');
+        $dotenv->load();
        try {
             $dsn = "mysql:host=" . $_ENV['DB_HOST'] . ";dbname=" . $_ENV['DB_NAME']. ";charset=" . $_ENV['DB_CHARSET'];
             $options = [
@@ -25,7 +33,7 @@ class Database{
                 PDO::ATTR_EMULATE_PREPARES => false,
             ];
             
-            $this->connection = new PDO($dsn,$_ENV['DATABASE_USER'], $_ENV['DATABASE_PASSWORD'], $options);
+            $this->connection = new PDO($dsn,$_ENV['DB_USER'], $_ENV['DB_PASSWORD'], $options);
         } catch (PDOException $e) {
             die("Erreur de connexion : " . $e->getMessage());
         }
