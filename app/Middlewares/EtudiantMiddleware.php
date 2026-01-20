@@ -1,7 +1,7 @@
 <?php
-namespace App\app\Middlewares;
+namespace App\Middlewares;
 
-use App\app\core\MiddlewareInterface;
+use App\core\MiddlewareInterface;
 
 class EtudiantMiddleware implements MiddlewareInterface
 {

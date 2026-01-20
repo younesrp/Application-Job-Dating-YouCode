@@ -1,6 +1,6 @@
 <?php
-namespace App\app\core;
-use App\app\core\Database;
+namespace App\core;
+use App\core\Database;
 abstract class BaseModel {
     protected $pdo;
     protected $table; // Doit être défini dans la classe child

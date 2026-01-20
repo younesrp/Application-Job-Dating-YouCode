@@ -1,7 +1,7 @@
 <?php
 
-namespace App\app\models;
-use App\app\core\BaseModel;
+namespace App\models;
+use App\core\BaseModel;
 
 class Student extends BaseModel {
 

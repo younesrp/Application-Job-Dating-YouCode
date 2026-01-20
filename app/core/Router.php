@@ -3,10 +3,10 @@
 //  Dynamic Routes
 
 /********************/
-namespace App\app\Core;
+namespace App\Core;
 
-use App\app\config\config;
-use App\app\core\BaseController;
+use App\config\config;
+use App\core\BaseController;
 
 class Router {
 
