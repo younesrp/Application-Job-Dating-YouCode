@@ -16,3 +16,5 @@ namespace App\config;
 //         'wallet' => [Front::class, 'storeWallet'],
 //     ]
 // ];
+
+$router->get('/admin/dashboard', 'App\Controllers\Back\DashboardController', 'index');

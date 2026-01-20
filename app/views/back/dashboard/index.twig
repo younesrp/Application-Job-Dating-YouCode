@@ -1,0 +1,94 @@
+{% extends "layout/base.twig" %}
+
+{% block page_title %}Vue d'ensemble{% endblock %}
+
+{% block body %}
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        
+        <div class="bg-white rounded-xl shadow-sm p-6 border-l-4 border-blue-500 flex items-center justify-between">
+            <div>
+                <p class="text-sm text-gray-500 font-medium mb-1">Offres Actives</p>
+                <h3 class="text-3xl font-bold text-gray-800">{{ stats.active_annonces }}</h3>
+            </div>
+            <div class="p-3 bg-blue-50 rounded-full text-blue-500">
+                <i class="fas fa-briefcase fa-lg"></i>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm p-6 border-l-4 border-green-500 flex items-center justify-between">
+            <div>
+                <p class="text-sm text-gray-500 font-medium mb-1">Entreprises</p>
+                <h3 class="text-3xl font-bold text-gray-800">{{ stats.entreprises }}</h3>
+            </div>
+            <div class="p-3 bg-green-50 rounded-full text-green-500">
+                <i class="fas fa-building fa-lg"></i>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm p-6 border-l-4 border-yellow-500 flex items-center justify-between">
+            <div>
+                <p class="text-sm text-gray-500 font-medium mb-1">Apprenants</p>
+                <h3 class="text-3xl font-bold text-gray-800">{{ stats.students }}</h3>
+            </div>
+            <div class="p-3 bg-yellow-50 rounded-full text-yellow-500">
+                <i class="fas fa-user-graduate fa-lg"></i>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm p-6 border-l-4 border-red-500 flex items-center justify-between">
+            <div>
+                <p class="text-sm text-gray-500 font-medium mb-1">Offres Archivées</p>
+                <h3 class="text-3xl font-bold text-gray-800">{{ stats.archived_annonces }}</h3>
+            </div>
+            <div class="p-3 bg-red-50 rounded-full text-red-500">
+                <i class="fas fa-archive fa-lg"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
+            <h3 class="text-lg font-semibold text-gray-800">Dernières Annonces</h3>
+        </div>
+        
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-gray-50 text-gray-600 text-xs uppercase tracking-wider">
+                        <th class="px-6 py-4 font-semibold">Titre du poste</th>
+                        <th class="px-6 py-4 font-semibold">Entreprise</th>
+                        <th class="px-6 py-4 font-semibold">Type</th>
+                        <th class="px-6 py-4 font-semibold">Date d'ajout</th>
+                        <th class="px-6 py-4 font-semibold text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+                    {% for ad in recent_ads %}
+                    <tr class="hover:bg-gray-50 transition duration-150">
+                        <td class="px-6 py-4 font-medium text-gray-800">{{ ad.titre }}</td>
+                        <td class="px-6 py-4 text-gray-600">{{ ad.entreprise_nom }}</td>
+                        <td class="px-6 py-4">
+                            <span class="px-3 py-1 text-xs font-semibold rounded-full 
+                                {% if ad.type_contrat == 'CDI' %} bg-blue-100 text-blue-800 
+                                {% elseif ad.type_contrat == 'Stage' %} bg-purple-100 text-purple-800 
+                                {% else %} bg-gray-100 text-gray-800 {% endif %}">
+                                {{ ad.type_contrat }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-gray-500">{{ ad.date_creation|date("d/m/Y") }}</td>
+                        <td class="px-6 py-4 text-right">
+                            <a href="#" class="text-blue-500 hover:text-blue-700"><i class="fas fa-edit"></i></a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="5" class="px-6 py-8 text-center text-gray-500">Aucune annonce récente.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock %}

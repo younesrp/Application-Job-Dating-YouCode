@@ -1,15 +1,11 @@
 {
-    "name": "lenovo/application-job-dating-you-code",
+    "name": "macbook/application-job-dating-you-code",
     "autoload": {
         "psr-4": {
-            "Lenovo\\ApplicationJobDatingYouCode\\": "src/"
+            "Macbook\\ApplicationJobDatingYouCode\\": "src/"
         }
     },
-    "authors": [
-        {
-            "name": "OUTERGA-MOUSTAFA",
-            "email": "outergamoustafa@gmail.com"
-        }
-    ],
-    "require": {}
+    "require": {
+        "twig/twig": "^3.22"
+    }
 }

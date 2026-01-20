@@ -5,3 +5,14 @@
 # RewriteCond %{REQUEST_FILENAME} !-d
 #RewriteRule ^(.*)$ public/index.php [QSA,L]
 # ErrorDocument 404 /404.php
+
+
+Options -MultiViews
+RewriteEngine On
+
+# إذا كان الملف أو المجلد موجوداً حقاً (مثل الصور أو CSS)، لا تفعل شيئاً
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# أي شيء آخر، أرسله لـ index.php
+RewriteRule ^ index.php [QSA,L]
