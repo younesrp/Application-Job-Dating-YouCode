@@ -2,13 +2,10 @@
 
 namespace App\core;
 use App\core\{View,Validator,Security,Session};
-class Controller
-{
 
-use App\core\View;
-use App\core\Validator;
-use App\core\Security;
-use App\core\Session;
+
+
+
 
 class Controller
 {
