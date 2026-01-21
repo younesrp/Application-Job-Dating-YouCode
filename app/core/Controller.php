@@ -1,13 +1,11 @@
 <?php
 
 namespace App\core;
-
-use App\core\{View, Validator, Security, Session};
-use Twig\Loader\FilesystemLoader;
+use App\core\{View,Validator,Security,Session};
 use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
 use Twig\TwigFunction;
-
-class Controller
+abstract class Controller
 {
     protected $view;
     protected $security;
@@ -21,22 +19,24 @@ class Controller
         $this->session = Session::getInstance();
         $this->validator = new Validator();
 
-        $loader = new FilesystemLoader(__DIR__ . '/../views'); 
+        // Chemin correct vers le dossier views
+        $viewsPath = dirname(__DIR__) . '/views';
+        $loader = new FilesystemLoader($viewsPath); 
         
         $this->twig = new Environment($loader, [
-            'cache' => false, 
+            'cache' => false,
             'debug' => true
         ]);
 
+        // Fonction asset pour les fichiers statiques
         $this->twig->addFunction(new TwigFunction('asset', function ($path) {
-            
             $projectDir = '/Application-Job-Dating-YouCode/public'; 
             return $projectDir . '/' . ltrim($path, '/');
         }));
     }
 
     /**
-     * Render a Twig template
+     * 
      */
     protected function render(string $view, array $data = []): void
     {

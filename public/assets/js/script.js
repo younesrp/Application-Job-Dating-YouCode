@@ -1,4 +1,3 @@
-
 document.addEventListener('DOMContentLoaded', function() {
     const addBtn = document.getElementById('addEntrepriseBtn');
     const entrepriseSection = document.getElementById('entrepriseSection');
@@ -7,8 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const logoUpload = document.getElementById('logoUpload');
     const logoInput = document.getElementById('logo');
     
-    // Afficher/masquer la section
-
+    // Afficher/masquer la section au clic sur le bouton "Ajouter une Entreprise"
     addBtn.addEventListener('click', function() {
         if (entrepriseSection.style.display === 'block') {
             entrepriseSection.style.display = 'none';
@@ -17,12 +15,11 @@ document.addEventListener('DOMContentLoaded', function() {
             entrepriseSection.style.display = 'block';
             addBtn.innerHTML = '<i class="fas fa-eye-slash"></i> Masquer le formulaire';
             // Réinitialiser le formulaire
-
             entrepriseForm.reset();
         }
     });
     
-    // Masquer au clic sur Annuler
+    // Masquer la section au clic sur "Annuler"
     cancelBtn.addEventListener('click', function() {
         entrepriseSection.style.display = 'none';
         addBtn.innerHTML = '<i class="fas fa-plus-circle"></i> Ajouter une Entreprise';
@@ -37,69 +34,63 @@ document.addEventListener('DOMContentLoaded', function() {
     logoInput.addEventListener('change', function() {
         if (this.files && this.files[0]) {
             const fileName = this.files[0].name;
-            const fileSize = (this.files[0].size / 1024 / 1024).toFixed(2); // MB
-            
-            // Vérifier la taille
-            if (this.files[0].size > 5 * 1024 * 1024) {
-                alert('Le fichier est trop volumineux (max 5MB)');
-                this.value = '';
-                return;
-            }
-            
             logoUpload.innerHTML = `
                 <div class="upload-icon">
                     <i class="fas fa-file-image"></i>
                 </div>
                 <p class="upload-text">${fileName}</p>
-                <p class="upload-hint">Taille: ${fileSize} MB</p>
+                <p class="upload-hint">Logo sélectionné</p>
             `;
         }
     });
     
-    // Validation côté client avant soumission
+    // Soumission du formulaire
     entrepriseForm.addEventListener('submit', function(e) {
-        const nom = document.getElementById('nom').value.trim();
+        e.preventDefault();
+        
+        // Récupérer les valeurs du formulaire
+        const nom = document.getElementById('nom').value;
         const secteur = document.getElementById('secteur').value;
-        const ville = document.getElementById('ville').value.trim();
-        const email = document.getElementById('email').value.trim();
-        const telephone = document.getElementById('telephone').value.trim();
+        const ville = document.getElementById('ville').value;
+        const email = document.getElementById('email').value;
+        const telephone = document.getElementById('telephone').value;
         
-        let errors = [];
+        // Ici, vous pouvez ajouter le code pour envoyer les données à votre backend
+        // Par exemple, via fetch() ou XMLHttpRequest
         
-        if (!nom) errors.push('Le nom est obligatoire');
-        if (!secteur) errors.push('Le secteur est obligatoire');
-        if (!ville) errors.push('La ville est obligatoire');
-        if (!email || !email.includes('@')) errors.push('Email invalide');
-        if (!telephone) errors.push('Le téléphone est obligatoire');
+        // Pour l'instant, affichons les données dans la console
+        console.log('Nouvelle entreprise ajoutée:');
+        console.log('Nom:', nom);
+        console.log('Secteur:', secteur);
+        console.log('Ville:', ville);
+        console.log('Email:', email);
+        console.log('Téléphone:', telephone);
+        console.log('Logo:', logoInput.files[0] ? logoInput.files[0].name : 'Aucun logo sélectionné');
         
-        if (errors.length > 0) {
-            e.preventDefault();
-            alert('Erreurs:\n' + errors.join('\n'));
-            return false;
-        }
+        // Afficher un message de succès
+        alert(`Entreprise "${nom}" ajoutée avec succès !`);
         
-        // Le formulaire sera soumis normalement
-        return true;
+        // Masquer le formulaire et réinitialiser
+        entrepriseSection.style.display = 'none';
+        addBtn.innerHTML = '<i class="fas fa-plus-circle"></i> Ajouter une Entreprise';
+        entrepriseForm.reset();
+        
+        // Réinitialiser l'area d'upload
+        logoUpload.innerHTML = `
+            <div class="upload-icon">
+                <i class="fas fa-cloud-upload-alt"></i>
+            </div>
+            <p class="upload-text">Cliquez pour télécharger le logo</p>
+            <p class="upload-hint">Formats acceptés: JPG, PNG, SVG (max. 5MB)</p>
+        `;
+    });
+    
+    // Animation pour le bouton d'ajout
+    addBtn.addEventListener('mouseenter', function() {
+        this.style.transform = 'translateY(-2px)';
+    });
+    
+    addBtn.addEventListener('mouseleave', function() {
+        this.style.transform = 'translateY(0)';
     });
 });
-function toggleForm() {
-        const container = document.getElementById('companyFormContainer');
-        container.classList.toggle('hidden');
-        // Reset form titles to Add mode
-        document.getElementById('formTitle').innerHTML = '<i class="fas fa-file-alt text-indigo-500"></i> Ajouter une Entreprise';
-    }
-
-    // وظيفة التعديل (مثال)
-    function editCompany(id) {
-        toggleForm();
-        document.getElementById('formTitle').innerHTML = '<i class="fas fa-edit text-orange-500"></i> Modifier l\'Entreprise #' + id;
-        // هنا يمكنك جلب بيانات الشركة بـ AJAX ووضعها في الـ inputs
-    }
-
-    // وظيفة تأكيد الحذف
-    function confirmDelete(id) {
-        if (confirm("Êtes-vous sûr de vouloir supprimer cette entreprise ? Cette action est irréversible.")) {
-            // هنا تقوم بتوجيه المستخدم لرابط الحذف أو إرسال Form الحذف
-            window.location.href = "/company/delete/" + id;
-        }
-    }

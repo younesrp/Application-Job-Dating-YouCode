@@ -1,6 +1,6 @@
 <?php
 namespace App\controllers\back;
-use App\core\Controller;
+use App\core\{Controller,Security,Session,Validator};
 use App\models\Company;
 
 class CompanyController extends Controller
@@ -30,18 +30,35 @@ class CompanyController extends Controller
 
     public function store()
     {
-        // Vérification CSRF
+        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+            $data = [
+                'title' => 'Ajouter Company',
+                'csrf_token' => $this->security->generateCsrfToken(),
+            ];
+            return $this->render('back/companies/index', $data);
+        }
+
+
+        // else $_SERVER['REQUEST_METHOD'] === 'POST'
         $this->verifyCsrf();
         
-        // Validation des données
-        $isValid = $this->validator->validate($_POST, [
-            'nom' => 'required|min:2',
-            'secteur' => 'required',
-            'ville' => 'required',
-            'email' => 'required|email',
-            'telephone' => 'required'
-        ]);
+        /** TODO: Traiter l'ajouter de company*/
+        $nom = $_POST['Nom'] ?? '';
+        $secteur = $_POST['Secteur'] ?? '';
+        $ville = $_POST['Ville'] ?? '';
+        $email = $_POST['email'] ?? '';
+        $telephone = $_POST['telephone'] ?? '';
 
+        // Validation les champs
+        $isValid = $this->validator->validate($_POST, [
+            'Nom' => "Oblier Nom d'entreprise!",
+            'Secteur' => "Oblier secteur d'entreprise!",
+            'Ville' => "Oblier secteur d'entreprise!",
+            'email' => "Oblier secteur d'entreprise!",
+            'telephone' => "Oblier secteur d'entreprise!",
+            'logo' => "Oblier image/logo d'entreprise!"
+        ]);
+        var_dump($isValid);
         if (!$isValid) {
             $this->session->flash('errors', $this->validator->errors());
             $this->redirect('/admin/companies');
