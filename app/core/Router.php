@@ -6,7 +6,7 @@
 namespace App\Core;
 
 use App\config\config;
-use App\core\BaseController;
+use App\core\Controller;
 
 class Router {
 
@@ -174,7 +174,7 @@ class Router {
     {
         // 4. إذا لم يوجد المسار
         http_response_code(404);
-        require __DIR__ . '/../views/404.php';
+        require __DIR__ . '/../views/back/404.php';
         exit;
     }
 
