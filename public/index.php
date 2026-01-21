@@ -1,9 +1,9 @@
 <?php
 // composer autoload
+
 require_once __DIR__ . '/../vendor/autoload.php';
 
-// تحميل الإعدادات من ملف .env
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../'); // حدد المسار الذي يوجد فيه ملف .env
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
 $dotenv->load();
 
 // echo "<pre>";
@@ -16,9 +16,8 @@ use App\controllers\front\AuthController;
 use App\Middlewares\{Middleware,EtudiantMiddleware};
 $router = new Router();
 
-/**
- * Routes
- */
+require_once __DIR__ . '/../config/routes.php'; 
+
 
 $router->get('/dashboard', [AuthController::class, 'dashboard'], [EtudiantMiddleware::class]);
 $router->post('/dashboard', [AuthController::class, 'dashboard'], [EtudiantMiddleware::class]);
@@ -34,5 +33,4 @@ $router->get('/logout', function() {session_unset();session_destroy();
 
 
 // dispatch request
-$controleur = $router->dispatch();
-//addRoute('dashboard', 'GET', $action);
+$router->dispatch();    

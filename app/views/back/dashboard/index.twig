@@ -1,0 +1,58 @@
+{% extends "layout/base.twig" %}
+
+{% block page_title %}Tableau de bord{% endblock %}
+
+{% block body %}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        
+        <div class="bg-white p-6 rounded-lg shadow-sm border-l-4 border-blue-500">
+            <p class="text-gray-500">Offres Actives</p>
+            <h3 class="text-2xl font-bold">{{ stats.active_annonces }}</h3>
+        </div>
+
+        <div class="bg-white p-6 rounded-lg shadow-sm border-l-4 border-green-500">
+            <p class="text-gray-500">Entreprises</p>
+            <h3 class="text-2xl font-bold">{{ stats.entreprises }}</h3>
+        </div>
+
+        <div class="bg-white p-6 rounded-lg shadow-sm border-l-4 border-yellow-500">
+            <p class="text-gray-500">Apprenants</p>
+            <h3 class="text-2xl font-bold">{{ stats.students }}</h3>
+        </div>
+
+        <div class="bg-white p-6 rounded-lg shadow-sm border-l-4 border-red-500">
+            <p class="text-gray-500">Archivés</p>
+            <h3 class="text-2xl font-bold">{{ stats.archived_annonces }}</h3>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+        <div class="px-6 py-4 border-b">
+            <h3 class="font-bold">Dernières Annonces</h3>
+        </div>
+        <table class="w-full text-left">
+            <thead class="bg-gray-50">
+                <tr>
+                    <th class="px-6 py-3">Titre</th>
+                    <th class="px-6 py-3">Entreprise</th>
+                    <th class="px-6 py-3">Type</th>
+                    <th class="px-6 py-3">Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ad in recent_ads %}
+                <tr class="border-b">
+                    <td class="px-6 py-4">{{ ad.titre }}</td>
+                    <td class="px-6 py-4">{{ ad.entreprise_nom }}</td>
+                    <td class="px-6 py-4">
+                        <span class="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800">{{ ad.type_contrat }}</span>
+                    </td>
+                    <td class="px-6 py-4">{{ ad.date_creation|date("d/m/Y") }}</td>
+                </tr>
+                {% else %}
+                <tr><td colspan="4" class="px-6 py-4 text-center">Aucune annonce.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
