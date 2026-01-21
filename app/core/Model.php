@@ -1,7 +1,7 @@
 <?php
-namespace App\app\core;
-use App\app\core\Database;
-abstract class BaseModel {
+namespace App\core;
+use App\core\Database;
+abstract class Model {
     protected $pdo;
     protected $table; // Doit être défini dans la classe child
     protected $primaryKey = 'id';

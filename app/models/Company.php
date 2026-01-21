@@ -1,13 +1,15 @@
 <?php
 
-namespace App\Models;
+namespace App\models;
 
-use App\Core\Model;
+use App\core\Model;
 
 class Company extends Model {
+    
+    protected $table = 'entreprises';
 
     public function countAll() {
-        $sql = "SELECT COUNT(*) as total FROM entreprises";
-        return $this->db->query($sql)->fetch()['total'];
+        $sql = "SELECT COUNT(*) FROM {$this->table}";
+        return (int) $this->pdo->query($sql)->fetchColumn();
     }
 }

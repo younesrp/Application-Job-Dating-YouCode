@@ -1,5 +1,5 @@
 <?php 
-namespace App\app\core;
+namespace App\core;
 
 
 interface MiddlewareInterface {

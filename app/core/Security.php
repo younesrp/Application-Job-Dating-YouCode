@@ -1,6 +1,6 @@
 <?php
 
-namespace App\app\core;
+namespace App\core;
 
 class Security
 {
@@ -96,6 +96,133 @@ class Security
     public function escapeString(string $string): string
     {
         return addslashes($string);
+    }
+
+    /**
+     * Valide un email avec filter_var
+     */
+    public function validateEmail(string $email): bool
+    {
+        return filter_var($email, FILTER_VALIDATE_EMAIL) !== false;
+    }
+
+    /**
+     * Valide un mot de passe (au moins 8 caractères, 1 majuscule, 1 chiffre, 1 caractère spécial)
+     */
+    public function validatePassword(string $password): bool
+    {
+        if (strlen($password) < 8) {
+            return false;
+        }
+
+        // Vérifier la présence d'au moins une majuscule, un chiffre et un caractère spécial
+        $hasUppercase = preg_match('/[A-Z]/', $password);
+        $hasLowercase = preg_match('/[a-z]/', $password);
+        $hasNumber = preg_match('/[0-9]/', $password);
+        $hasSpecialChar = preg_match('/[!@#$%^&*()_+\-=\[\]{};:"\\|,.<>\/?]/', $password);
+
+        return $hasUppercase && $hasLowercase && $hasNumber && $hasSpecialChar;
+    }
+
+    /**
+     * Obtient le message d'erreur de validation du mot de passe
+     */
+    public function getPasswordValidationError(string $password): string
+    {
+        if (strlen($password) < 8) {
+            return "Le mot de passe doit contenir au moins 8 caractères";
+        }
+
+        $errors = [];
+        if (!preg_match('/[A-Z]/', $password)) {
+            $errors[] = "au moins une majuscule";
+        }
+        if (!preg_match('/[a-z]/', $password)) {
+            $errors[] = "au moins une minuscule";
+        }
+        if (!preg_match('/[0-9]/', $password)) {
+            $errors[] = "au moins un chiffre";
+        }
+        if (!preg_match('/[!@#$%^&*()_+\-=\[\]{};:"\\|,.<>\/?]/', $password)) {
+            $errors[] = "au moins un caractère spécial";
+        }
+
+        return "Le mot de passe doit contenir : " . implode(", ", $errors);
+    }
+
+    /**
+     * Protège contre les injections SQL en utilisant des paramètres liés (recommandé)
+     * Cette méthode suppose l'utilisation de PDO avec des prepared statements
+     */
+    public function preventSQLInjection(string $query, array $params = []): array
+    {
+        // Vérifier la présence de patterns dangereux dans la requête
+        $dangerousPatterns = [
+            "'; DROP TABLE",
+            "1' OR '1'='1",
+            "UNION SELECT",
+            "/*",
+            "--",
+            "xp_",
+            "sp_"
+        ];
+
+        $query = strtoupper($query);
+        foreach ($dangerousPatterns as $pattern) {
+            if (strpos($query, strtoupper($pattern)) !== false) {
+                throw new \Exception("Motif SQL dangereux détecté dans la requête");
+            }
+        }
+
+        // Nettoyer les paramètres
+        $cleanedParams = array_map(function($param) {
+            if (is_string($param)) {
+                return $this->sanitize($param);
+            }
+            return $param;
+        }, $params);
+
+        return $cleanedParams;
+    }
+
+    /**
+     * Valide une URL
+     */
+    public function validateUrl(string $url): bool
+    {
+        return filter_var($url, FILTER_VALIDATE_URL) !== false;
+    }
+
+    /**
+     * Valide une adresse IP
+     */
+    public function validateIP(string $ip): bool
+    {
+        return filter_var($ip, FILTER_VALIDATE_IP) !== false;
+    }
+
+    /**
+     * Valide un nombre entier
+     */
+    public function validateInteger($value): bool
+    {
+        return filter_var($value, FILTER_VALIDATE_INT) !== false;
+    }
+
+    /**
+     * Valide un nombre flottant
+     */
+    public function validateFloat($value): bool
+    {
+        return filter_var($value, FILTER_VALIDATE_FLOAT) !== false;
+    }
+
+    /**
+     * Valide un booléen
+     */
+    public function validateBoolean($value): bool
+    {
+        return filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) !== null;
     }
 
     public static function againstHijacking(): void {
