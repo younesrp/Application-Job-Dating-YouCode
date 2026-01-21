@@ -1,7 +1,7 @@
 <?php
 namespace App\core;
 use App\core\Database;
-abstract class BaseModel {
+abstract class Model {
     protected $pdo;
     protected $table; // Doit être défini dans la classe child
     protected $primaryKey = 'id';
@@ -112,7 +112,7 @@ abstract class BaseModel {
 
 // <?php
 
-// namespace App\app\core;
+// namespace App\core;
 
 // use PDO;
 

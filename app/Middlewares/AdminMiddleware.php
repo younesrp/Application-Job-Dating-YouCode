@@ -11,5 +11,6 @@ class AdminMiddleware implements MiddlewareInterface
             header('Location: /login');
             exit;
         }
+        
     }
 }

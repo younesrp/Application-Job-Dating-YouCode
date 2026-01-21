@@ -1,10 +1,10 @@
 <?php
-namespace App\controllers;
-use App\core\{BaseController,Security,Session,Validator};
+namespace App\controllers\front;
+use App\core\{Controller,Security,Session,Validator};
 
 // use App\models\User;
 
-class AuthController extends BaseController
+class AuthController extends Controller
 {
  
     public function __construct()
@@ -53,7 +53,6 @@ class AuthController extends BaseController
     public function showLogin()
     {
        
-
         $data = [
             'title' => 'Connexion',
             'csrf_token' => $this->security->generateCsrfToken(),
@@ -62,7 +61,7 @@ class AuthController extends BaseController
 
         ];
 
-        $this->render('Auth/login', $data);
+        $this->render('front/auth/login', $data);
     }
 
     /**
@@ -80,7 +79,7 @@ class AuthController extends BaseController
                 'success' => $this->session->flash('success'),
             ];
             
-            return $this->render('Auth/login', $data);
+            return $this->render('front/auth/login', $data);
         }
         
         // POST → Traiter la connexion
@@ -97,7 +96,7 @@ class AuthController extends BaseController
 
         if (!$isValid) {
             $this->session->flash('errors', $this->validator->errors());
-            $this->redirect('/login');
+            $this->redirect('front/auth/login');
         }
 
         // ✅ Nettoyer les données avant utilisation
@@ -125,7 +124,8 @@ class AuthController extends BaseController
             $this->redirect('/dashboard');
         } catch (\Exception $e) {
             $this->session->flash('errors', ['email' => [$e->getMessage()]]);
-            $this->redirect('/login');
+            echo '/front/auth/login';
+            $this->redirect('/front/auth/login');
         }
     } 
     
