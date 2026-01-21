@@ -1,183 +1,90 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ajouter une Entreprise</title>
-    <link src="/../../../../../public/assets/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
-<body>
-    <div class="container">
-        <h1><i class="fas fa-building"></i> Gestion des Entreprises</h1>
+{% extends "layout/base.twig" %} 
+
+{% block title %}Ajouter une Entreprise{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="/assets/css/style.css">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1><i class="fas fa-building"></i> Gestion des Entreprises</h1>
+    
+    <button type="button" class="add-btn" id="addEntrepriseBtn">
+        <i class="fas fa-plus-circle"></i> Ajouter une Entreprise
+    </button>
+    
+    <div class="hidden-section" id="entrepriseSection">
+        <h2 class="form-title"><i class="fas fa-file-alt"></i> Informations de l'Entreprise</h2>
         
-        <button class="add-btn" id="addEntrepriseBtn">
-            <i class="fas fa-plus-circle"></i> Ajouter une Entreprise
-        </button>
-        
-        <div class="hidden-section" id="entrepriseSection">
-            <h2 class="form-title"><i class="fas fa-file-alt"></i> Informations de l'Entreprise</h2>
+        {# 1. لاحظ إضافة enctype و method #}
+        <form id="entrepriseForm" action="/Company" method="POST" enctype="multipart/form-data">
             
-            <form id="entrepriseForm">
-            <input type='hidden' name='hidden' value='{{csrf_token}}'>
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label for="nom"><i class="fas fa-signature"></i> Nom de l'entreprise <span class="required">*</span></label>
-                        <input type="text" id="nom" name="Nom" placeholder="Entrez le nom de l'entreprise">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="secteur"><i class="fas fa-industry"></i> Secteur d'activité <span class="required">*</span></label>
-                        <select id="secteur" name="secteur">
-                            <option value="">Sélectionnez un secteur</option>
-                            <option name="Secteur" value="informatique">Informatique & Technologies</option>
-                            <option name="Secteur" value="commerce">Commerce & Distribution</option>
-                            <option name="Secteur" value="industrie">Industrie & Production</option>
-                            <option name="Secteur" value="services">Services & Consulting</option>
-                            <option name="Secteur" value="banque">Banque & Finance</option>
-                            <option name="Secteur" value="sante">Santé & Médical</option>
-                            <option name="Secteur" value="education">Éducation & Formation</option>
-                            <option name="Secteur" value="autre">Autre</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="ville"><i class="fas fa-city"></i> Ville <span class="required">*</span></label>
-                        <input type="text" id="ville" name="Ville" placeholder="Entrez la ville de l'entreprise">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="email"><i class="fas fa-envelope"></i> Email <span class="required">*</span></label>
-                        <input type="email" id="email" name="email" placeholder="entreprise@exemple.com">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="telephone"><i class="fas fa-phone"></i> Téléphone <span class="required">*</span></label>
-                        <input type="tel" id="telephone" name="telephone" placeholder="+212 6 XX XX XX XX">
-                    </div>
-                    
-                    <div class="form-group logo-upload">
-                        <label for="logo"><i class="fas fa-image"></i> Logo de l'entreprise</label>
-                        <div class="upload-area" id="logoUpload">
-                            <div class="upload-icon">
-                                <i class="fas fa-cloud-upload-alt"></i>
-                            </div>
-                            <p class="upload-text">Cliquez pour télécharger le logo</p>
-                            <p class="upload-hint">Formats acceptés: JPG, PNG, SVG (max. 5MB)</p>
-                            <input type="file" id="logo" name="logo" accept="image/*" style="display: none;">
+            {# 2. تصحيح اسم التوكن #}
+            <input type="hidden" name="_token" value="{{ csrf_token }}">
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="nom"><i class="fas fa-signature"></i> Nom de l'entreprise <span class="required">*</span></label>
+                    <input type="text" id="nom" name="Nom" placeholder="Entrez le nom">
+                </div>
+                
+                <div class="form-group">
+                    <label for="secteur"><i class="fas fa-industry"></i> Secteur d'activité <span class="required">*</span></label>
+                    <select id="secteur" name="Secteur">
+                        <option value="">Sélectionnez un secteur</option>
+                        <option value="informatique">Informatique & Technologies</option>
+                        <option value="commerce">Commerce & Distribution</option>
+                        <option value="industrie">Industrie & Production</option>
+                        <option value="services">Services & Consulting</option>
+                        <option value="banque">Banque & Finance</option>
+                        <option value="sante">Santé & Médical</option>
+                        <option value="education">Éducation & Formation</option>
+                        <option value="autre">Autre</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="ville"><i class="fas fa-city"></i> Ville <span class="required">*</span></label>
+                    <input type="text" id="ville" name="Ville" placeholder="Ville">
+                </div>
+                
+                <div class="form-group">
+                    <label for="email"><i class="fas fa-envelope"></i> Email <span class="required">*</span></label>
+                    <input type="email" id="email" name="email" placeholder="Email">
+                </div>
+                
+                <div class="form-group">
+                    <label for="telephone"><i class="fas fa-phone"></i> Téléphone <span class="required">*</span></label>
+                    <input type="tel" id="telephone" name="telephone" placeholder="+212...">
+                </div>
+                
+                <div class="form-group logo-upload">
+                    <label for="logo"><i class="fas fa-image"></i> Logo de l'entreprise</label>
+                    <div class="upload-area" id="logoUpload">
+                        <div class="upload-icon">
+                            <i class="fas fa-cloud-upload-alt"></i>
                         </div>
-                    </div>
-                    
-                    <div class="form-buttons">
-                        <button type="submit" class="submit-btn">
-                            <i class="fas fa-check"></i> Enregistrer l'entreprise
-                        </button>
-                        <button type="button" class="cancel-btn" id="cancelBtn">
-                            <i class="fas fa-times"></i> Annuler
-                        </button>
+                        <p class="upload-text">Cliquez pour télécharger le logo</p>
+                        {# name="logo" ضروري لاستقبال الملف #}
+                        <input type="file" id="logo" name="logo" accept="image/*">
                     </div>
                 </div>
-            </form>
-        </div>
+                
+                <div class="form-buttons">
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-check"></i> Enregistrer
+                    </button>
+                    <button type="button" class="cancel-btn" id="cancelBtn">
+                        <i class="fas fa-times"></i> Annuler
+                    </button>
+                </div>
+            </div>
+        </form>
     </div>
+</div>
+{% endblock %}
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const addBtn = document.getElementById('addEntrepriseBtn');
-            const entrepriseSection = document.getElementById('entrepriseSection');
-            const cancelBtn = document.getElementById('cancelBtn');
-            const entrepriseForm = document.getElementById('entrepriseForm');
-            const logoUpload = document.getElementById('logoUpload');
-            const logoInput = document.getElementById('logo');
-            
-            // Afficher/masquer la section au clic sur le bouton "Ajouter une Entreprise"
-            addBtn.addEventListener('click', function() {
-                if (entrepriseSection.style.display === 'block') {
-                    entrepriseSection.style.display = 'none';
-                    addBtn.innerHTML = '<i class="fas fa-plus-circle"></i> Ajouter une Entreprise';
-                } else {
-                    entrepriseSection.style.display = 'block';
-                    addBtn.innerHTML = '<i class="fas fa-eye-slash"></i> Masquer le formulaire';
-                    // Réinitialiser le formulaire
-                    entrepriseForm.reset();
-                }
-            });
-            
-            // Masquer la section au clic sur "Annuler"
-            cancelBtn.addEventListener('click', function() {
-                entrepriseSection.style.display = 'none';
-                addBtn.innerHTML = '<i class="fas fa-plus-circle"></i> Ajouter une Entreprise';
-                entrepriseForm.reset();
-            });
-            
-            // Gérer l'upload du logo
-            logoUpload.addEventListener('click', function() {
-                logoInput.click();
-            });
-            
-            logoInput.addEventListener('change', function() {
-                if (this.files && this.files[0]) {
-                    const fileName = this.files[0].name;
-                    logoUpload.innerHTML = `
-                        <div class="upload-icon">
-                            <i class="fas fa-file-image"></i>
-                        </div>
-                        <p class="upload-text">${fileName}</p>
-                        <p class="upload-hint">Logo sélectionné</p>
-                    `;
-                }
-            });
-            
-            // Soumission du formulaire
-            entrepriseForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                // Récupérer les valeurs du formulaire
-                const nom = document.getElementById('nom').value;
-                const secteur = document.getElementById('secteur').value;
-                const ville = document.getElementById('ville').value;
-                const email = document.getElementById('email').value;
-                const telephone = document.getElementById('telephone').value;
-                
-                // Ici, vous pouvez ajouter le code pour envoyer les données à votre backend
-                // Par exemple, via fetch() ou XMLHttpRequest
-                
-                // Pour l'instant, affichons les données dans la console
-                console.log('Nouvelle entreprise ajoutée:');
-                console.log('Nom:', nom);
-                console.log('Secteur:', secteur);
-                console.log('Ville:', ville);
-                console.log('Email:', email);
-                console.log('Téléphone:', telephone);
-                console.log('Logo:', logoInput.files[0] ? logoInput.files[0].name : 'Aucun logo sélectionné');
-                
-                // Afficher un message de succès
-                alert(`Entreprise "${nom}" ajoutée avec succès !`);
-                
-                // Masquer le formulaire et réinitialiser
-                entrepriseSection.style.display = 'none';
-                addBtn.innerHTML = '<i class="fas fa-plus-circle"></i> Ajouter une Entreprise';
-                entrepriseForm.reset();
-                
-                // Réinitialiser l'area d'upload
-                logoUpload.innerHTML = `
-                    <div class="upload-icon">
-                        <i class="fas fa-cloud-upload-alt"></i>
-                    </div>
-                    <p class="upload-text">Cliquez pour télécharger le logo</p>
-                    <p class="upload-hint">Formats acceptés: JPG, PNG, SVG (max. 5MB)</p>
-                `;
-            });
-            
-            // Animation pour le bouton d'ajout
-            addBtn.addEventListener('mouseenter', function() {
-                this.style.transform = 'translateY(-2px)';
-            });
-            
-            addBtn.addEventListener('mouseleave', function() {
-                this.style.transform = 'translateY(0)';
-            });
-        });
-    </script>
-</body>
-</html>
+{% block scripts %}
+    <script src="/assets/js/script.js"></script>
+{% endblock %}

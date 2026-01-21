@@ -10,6 +10,9 @@ class Student extends BaseModel {
     // protected $table = 'app_users';
     
     
-
+   public function countAll() {
+        $sql = "SELECT COUNT(*) as total FROM apprenants";
+        return $this->db->query($sql)->fetch()['total'];
+    }
     
 }

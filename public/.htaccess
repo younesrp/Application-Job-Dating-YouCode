@@ -1,6 +1,6 @@
 #Front Controller Pattern
 RewriteEngine On
-
+# Rediriger vers le dossier public
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ public/index.php [QSA,L]
