@@ -112,7 +112,7 @@ abstract class Model {
 
 // <?php
 
-// namespace App\app\core;
+// namespace App\core;
 
 // use PDO;
 

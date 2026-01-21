@@ -1,6 +1,9 @@
 <?php
 
 namespace App\core;
+use App\core\{View,Validator,Security,Session};
+class Controller
+{
 
 use App\core\View;
 use App\core\Validator;
@@ -38,7 +41,8 @@ class Controller
     protected function view(string $view, array $data = [])
     {
         extract($data);
-        $viewPath = __DIR__ . '/../views/' . $view . '.php';
+
+        $viewPath = __DIR__ . '/../views/' . $view . '.twig';
 
         if (!file_exists($viewPath)) {
             die("View not found: {$viewPath}");
