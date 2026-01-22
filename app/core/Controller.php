@@ -2,13 +2,7 @@
 
 namespace App\core;
 use App\core\{View,Validator,Security,Session};
-class Controller
-{
 
-use App\core\View;
-use App\core\Validator;
-use App\core\Security;
-use App\core\Session;
 
 class Controller
 {
@@ -60,6 +54,7 @@ class Controller
 
     protected function redirect(string $url, int $statusCode = 302)
     {
+        error_log("Redirecting to: " . $url);
         http_response_code($statusCode);
         header("Location: $url");
         exit;

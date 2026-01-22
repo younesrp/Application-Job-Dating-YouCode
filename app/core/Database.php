@@ -33,7 +33,7 @@ class Database{
                 PDO::ATTR_EMULATE_PREPARES => false,
             ];
             
-            $this->connection = new PDO($dsn,$_ENV['DB_USER'], $_ENV['DB_PASS'], $options);
+            $this->connection = new PDO($dsn,$_ENV['DB_USER'], $_ENV['DB_PASSWORD'], $options);
         } catch (PDOException $e) {
             die("Erreur de connexion : " . $e->getMessage());
         }
