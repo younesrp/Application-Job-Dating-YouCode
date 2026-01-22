@@ -1,82 +1,171 @@
-{% extends "layout/base.twig" %} 
+{% extends "back/layout.twig" %} 
 
-{% block title %}Ajouter une Entreprise{% endblock %}
+{% block title %}Gestion des Entreprises{% endblock %}
 
-{% block styles %}
-<link rel="stylesheet" href="/assets/css/style.css">
-{% endblock %}
-
-{% block body %}
-<div class="container">
-    <h1><i class="fas fa-building"></i> Gestion des Entreprises</h1>
-        <h2 class="form-title"><i class="fas fa-file-alt"></i> Informations de l'Entreprise</h2>
+{% block content %}
+<div class="max-w-[1000px] mx-auto px-4">
+    
+    <div id="headerSection" class="flex flex-col md:flex-row justify-between items-center mb-8 bg-white p-6 rounded-xl shadow-sm">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-800 flex items-center gap-3">
+                <i class="fas fa-building text-indigo-600"></i>
+                Gestion des Entreprises
+            </h1>
+            <p class="text-gray-500 text-sm">Gérez la liste de vos partenaires et leurs informations.</p>
+        </div>
         
-        {# 1. لاحظ إضافة enctype و method #}
-        <form id="entrepriseForm" action="/company" method="POST" enctype="multipart/form-data">
-            <input type="hidden" name="_token" value="{{ csrf_token }}">
+        <div class="flex gap-3 mt-4 md:mt-0">
+            <button id="addBtnHeader" onclick="toggleForm()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-lg font-medium flex items-center gap-2 transition-all">
+                <i class="fas fa-plus"></i> Ajouter une Entreprise
+            </button>
+        </div>
+    </div>
 
-            <div class="form-grid">
-                <div class="form-group">
-                    <label for="nom"><i class="fas fa-signature"></i> Nom de l'entreprise <span class="required">*</span></label>
-                    <input type="text" id="nom" name="Nom" placeholder="Entrez le nom">
+    <div id="companyFormContainer" class="hidden mb-8 bg-white rounded-xl shadow-lg p-8 border-t-4 border-indigo-500 transition-all">
+        <div class="flex justify-between items-center mb-6">
+            <h2 id="formTitle" class="text-xl font-semibold text-gray-800 flex items-center gap-2">
+                <i class="fas fa-file-alt text-indigo-500"></i>
+                Informations de l'Entreprise
+            </h2>
+            <button onclick="toggleForm()" class="text-gray-400 hover:text-red-500">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+
+        <form id="mainCompanyForm" action="/company" method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="_token" value="{{ csrf_token }}">
+            <input type="hidden" id="formMethod" name="_method" value="POST">
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div class="flex flex-col">
+                    <label class="mb-2 font-semibold text-gray-700">Nom de l'entreprise *</label>
+                    <input type="text" name="Nom" required class="px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none">
                 </div>
-                
-                <div class="form-group">
-                    <label for="secteur"><i class="fas fa-industry"></i> Secteur d'activité <span class="required">*</span></label>
-                    <select id="secteur" name="Secteur">
-                        <option value="">Sélectionnez un secteur</option>
-                        <option value="informatique">Informatique & Technologies</option>
-                        <option value="commerce">Commerce & Distribution</option>
-                        <option value="industrie">Industrie & Production</option>
-                        <option value="services">Services & Consulting</option>
-                        <option value="banque">Banque & Finance</option>
-                        <option value="sante">Santé & Médical</option>
-                        <option value="education">Éducation & Formation</option>
-                        <option value="autre">Autre</option>
+
+                <div class="flex flex-col">
+                    <label class="mb-2 font-semibold text-gray-700">Secteur *</label>
+                    <select name="Secteur" required class="px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none">
+                        <option value="">Sélectionnez</option>
+                        <option>Informatique</option>
+                        <option>Commerce</option>
+                        <option>Industrie</option>
                     </select>
                 </div>
-                
-                <div class="form-group">
-                    <label for="ville"><i class="fas fa-city"></i> Ville <span class="required">*</span></label>
-                    <input type="text" id="ville" name="Ville" placeholder="Ville">
+
+                <div class="flex flex-col">
+                    <label class="mb-2 font-semibold text-gray-700">Ville *</label>
+                    <input type="text" name="Ville" required class="px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none">
                 </div>
-                
-                <div class="form-group">
-                    <label for="email"><i class="fas fa-envelope"></i> Email <span class="required">*</span></label>
-                    <input type="email" id="email" name="email" placeholder="Email">
+
+                <div class="flex flex-col">
+                    <label class="mb-2 font-semibold text-gray-700">Email *</label>
+                    <input type="email" name="email" required class="px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none">
                 </div>
-                
-                <div class="form-group">
-                    <label for="telephone"><i class="fas fa-phone"></i> Téléphone <span class="required">*</span></label>
-                    <input type="tel" id="telephone" name="telephone" placeholder="+212...">
-                </div>
-                
-                <div class="form-group logo-upload">
-                    <label for="logo"><i class="fas fa-image"></i> Logo de l'entreprise</label>
-                    <div class="upload-area" id="logoUpload">
-                        <div class="upload-icon">
-                            <i class="fas fa-cloud-upload-alt"></i>
-                        </div>
-                        <p class="upload-text">Cliquez pour télécharger le logo</p>
-                        {# name="logo" ضروري لاستقبال الملف #}
-                        <input type="file" id="logo" name="logo" accept="image/*">
+
+                <div class="md:col-span-2">
+                    <label class="mb-2 font-semibold text-gray-700 block">Logo</label>
+                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:bg-gray-50 cursor-pointer" onclick="document.getElementById('logoInput').click()">
+                        <i class="fas fa-cloud-upload-alt text-3xl text-gray-400 mb-2"></i>
+                        <p class="text-sm text-gray-500">Cliquez pour changer le logo</p>
+                        <input type="file" id="logoInput" name="logo" class="hidden">
                     </div>
                 </div>
-                
-                <div class="form-buttons">
-                    <button type="submit" class="submit-btn">
-                        <i class="fas fa-check"></i> Enregistrer
+
+                <div class="md:col-span-2 flex gap-3 mt-4">
+                    <button type="submit" name="company" class="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-lg font-bold shadow-md transition-all">
+                        <i class="fas fa-save mr-2"></i> Enregistrer
                     </button>
-                    <button type="button" class="cancel-btn" id="cancelBtn">
-                        <i class="fas fa-times"></i> Annuler
+                    <button type="button" onclick="toggleForm()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-8 py-3 rounded-lg font-bold transition-all">
+                        Annuler
                     </button>
                 </div>
             </div>
         </form>
-</div>
-{% endblock %}
+    </div>
 
-{% block scripts %}
-    {# استخدام دالة asset لاستدعاء السكربت #}
-    <script src="{{ asset('assets/js/script.js') }}"></script>
+    <div id="companyTableContainer" class="bg-white rounded-xl shadow-sm overflow-hidden transition-all">
+        <table class="w-full text-left">
+            <thead class="bg-gray-50 border-b">
+                <tr>
+                    <th class="px-6 py-4 text-sm font-semibold text-gray-600">Entreprise</th>
+                    <th class="px-6 py-4 text-sm font-semibold text-gray-600">Secteur</th>
+                    <th class="px-6 py-4 text-sm font-semibold text-gray-600 text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y">
+                {% for company in companies %}
+                <tr class="hover:bg-gray-50 transition">
+                    <td class="px-6 py-4 font-medium text-gray-900">{{ company.Nom }}</td>
+                    <td class="px-6 py-4 text-gray-600 text-sm">{{ company.Secteur }}</td>
+                    <td class="px-6 py-4 text-right flex justify-end gap-2">
+                        <button onclick="editCompany('{{ company.id }}', '{{ company.Nom }}', '{{ company.Secteur }}', '{{ company.Ville }}', '{{ company.email }}')" class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition" title="Modifier">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button onclick="confirmDelete('{{ company.id }}')" class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition" title="Supprimer">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const formContainer = document.getElementById('companyFormContainer');
+        const tableContainer = document.getElementById('companyTableContainer');
+        const headerBtn = document.getElementById('addBtnHeader');
+        const formTitle = document.getElementById('formTitle');
+        const companyForm = document.getElementById('mainCompanyForm');
+        const methodInput = document.getElementById('formMethod');
+
+        // دالة التبديل الذكي
+        window.toggleForm = function() {
+            // التبديل بين الفورم والجدول
+            const isFormHidden = formContainer.classList.contains('hidden');
+            
+            if (isFormHidden) {
+                // سنظهر الفورم ونخفي الجدول والزر الرئيسي
+                formContainer.classList.remove('hidden');
+                tableContainer.classList.add('hidden');
+                headerBtn.classList.add('hidden');
+            } else {
+                // سنخفي الفورم ونظهر الجدول والزر الرئيسي
+                formContainer.classList.add('hidden');
+                tableContainer.classList.remove('hidden');
+                headerBtn.classList.remove('hidden');
+                
+                // إعادة تهيئة الفورم للحالة الأصلية
+                companyForm.reset();
+                companyForm.action = "/company";
+                methodInput.value = "POST";
+                formTitle.innerHTML = '<i class="fas fa-file-alt text-indigo-500"></i> Ajouter une Entreprise';
+            }
+        };
+
+        window.editCompany = function(id, name, secteur, ville, email) {
+            // نستخدم toggleForm لإعداد الرؤية
+            if (formContainer.classList.contains('hidden')) {
+                toggleForm();
+            }
+            
+            formTitle.innerHTML = '<i class="fas fa-edit text-orange-500"></i> Modifier l\'Entreprise: ' + name;
+            companyForm.action = "/company/update/" + id;
+            methodInput.value = "PUT";
+
+            document.getElementsByName('Nom')[0].value = name;
+            document.getElementsByName('Secteur')[0].value = secteur;
+            document.getElementsByName('Ville')[0].value = ville;
+            document.getElementsByName('email')[0].value = email;
+        };
+
+        window.confirmDelete = function(id) {
+            if (confirm("🚨 Êtes-vous sûr de vouloir supprimer cette entreprise ?")) {
+                window.location.href = "/company/delete/" + id;
+            }
+        };
+    });
+</script>
 {% endblock %}

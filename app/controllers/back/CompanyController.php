@@ -51,7 +51,7 @@ class CompanyController extends Controller
         $ville = $_POST['Ville'] ?? '';
         $email = $_POST['email'] ?? '';
         $telephone = $_POST['telephone'] ?? '';
-
+        
         // Validation les champs
         $isValid = $this->validator->validate($_POST, [
             'Nom' => "Oblier Nom d'entreprise!",
@@ -69,23 +69,32 @@ class CompanyController extends Controller
 
         // ✅ Nettoyer les données avant utilisation
         $sanitizedData = $this->validator->sanitize($_POST, [
+            'Nom' => 'string',
+            'Secteur' => 'string',
+            'Ville' => 'string',
             'email' => 'email',
-            'password' => 'string'
+            'telephone' => 'integer',
+            'logo' => 'url'
         ]);
 
+        $Nom = $sanitizedData['Nom'];
+        $Secteur = $sanitizedData['Secteur'];
+        $Ville = $sanitizedData['Ville'];
         $email = $sanitizedData['email'];
-        $password = $sanitizedData['password'];
+        $telephone = $sanitizedData['telephone'];
+        $logo = $sanitizedData['logo'];
 
-        // Vérifier les identifiants (exemple simplifié)
+        // Implémenter l'ajout avec validation d'email unique
         // En production, utiliser des prepared statements avec PDO
         try {
             // Nettoyage des paramètres contre injection SQL
             $params = $this->security->preventSQLInjection(
-                "SELECT * FROM users WHERE email = ?",
+                "SELECT * FROM entreprises WHERE email = ?",
                 [$email]
             );
+            var_dump($params);
             
-            $this->session->flash('success', 'Connexion réussie');
+            $this->session->flash('success', 'Enregistre réussie');
             $this->redirect('back/companies/index');
         } catch (\Exception $e) {
             $this->session->flash('errors', ['email' => [$e->getMessage()]]);

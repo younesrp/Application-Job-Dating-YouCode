@@ -27,9 +27,9 @@ require_once __DIR__ . '/../config/routes.php';
 $router->get('/admin/entreprises', [CompanyController::class, 'showCompany']);
 $router->post('/admin/entreprises', [CompanyController::class, 'company']);
 
-$router->get('/admin/announcements', [AnnoncesController::class, 'index'], [AdminMiddleware::class]);
+$router->get('/admin/annonces', [AnnoncesController::class, 'index'], [AdminMiddleware::class]);
 $router->get('/admin/companies', [CompanyController::class, 'showCompany'], [AdminMiddleware::class]);
-//$router->get('/admin/students', [StudentController::class, 'index'], [AdminMiddleware::class]);
+$router->post('/companies', [CompanyController::class, 'company'], [AdminMiddleware::class]);
 
 $router->get('/logout', function() {session_unset();session_destroy();});
 

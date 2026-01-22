@@ -82,3 +82,24 @@ document.addEventListener('DOMContentLoaded', function() {
         return true;
     });
 });
+function toggleForm() {
+        const container = document.getElementById('companyFormContainer');
+        container.classList.toggle('hidden');
+        // Reset form titles to Add mode
+        document.getElementById('formTitle').innerHTML = '<i class="fas fa-file-alt text-indigo-500"></i> Ajouter une Entreprise';
+    }
+
+    // وظيفة التعديل (مثال)
+    function editCompany(id) {
+        toggleForm();
+        document.getElementById('formTitle').innerHTML = '<i class="fas fa-edit text-orange-500"></i> Modifier l\'Entreprise #' + id;
+        // هنا يمكنك جلب بيانات الشركة بـ AJAX ووضعها في الـ inputs
+    }
+
+    // وظيفة تأكيد الحذف
+    function confirmDelete(id) {
+        if (confirm("Êtes-vous sûr de vouloir supprimer cette entreprise ? Cette action est irréversible.")) {
+            // هنا تقوم بتوجيه المستخدم لرابط الحذف أو إرسال Form الحذف
+            window.location.href = "/company/delete/" + id;
+        }
+    }
