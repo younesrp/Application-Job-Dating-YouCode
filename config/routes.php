@@ -3,6 +3,7 @@
 
 
 use App\controllers\back\DashboardController;
+use App\controllers\back\AnnoncesController;
 
 // الطريقة 1: باستعمال ::class (هي اللي كننصحك بيها، بروفيسيونيل)
 $router->get('admin/dashboard', [DashboardController::class, 'index']);
@@ -23,3 +24,21 @@ $router->get('admin/dashboard', [DashboardController::class, 'index']);
 $router->get('/', function() {
     echo "<h1>Bienvenue sur la page d'accueil !</h1>";
 });
+// صفحة إضافة إعلان (Formulaire)
+$router->get('/admin/annonces/create', [AnnoncesController::class, 'create']);
+
+// معالجة البيانات (Save)
+$router->post('/admin/annonces/save', [AnnoncesController::class, 'save']);
+
+// صفحة الإعلانات
+// بدل السطر القديم بهدا:
+$router->get('/admin/annonces', [AnnoncesController::class, 'index']);
+
+// الحذف (كنستعملو {id} باش نعرفو إنا وحدة غنمسحو)
+$router->get('/admin/annonces/delete/{id}', [AnnoncesController::class, 'delete']);
+
+// صفحة التعديل (Edit Form)
+$router->get('/admin/annonces/edit/{id}', [AnnoncesController::class, 'edit']);
+
+// تسجيل التعديلات (Update Action)
+$router->post('/admin/annonces/update/{id}', [AnnoncesController::class, 'update']);
