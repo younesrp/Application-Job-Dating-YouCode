@@ -1,0 +1,89 @@
+{% extends "back/layout.twig" %}
+
+{% block title %}Ajouter une entreprise{% endblock %}
+
+{% block content %}
+    
+    <div class="mb-6">
+        <a href="/admin/companies" class="text-slate-500 hover:text-indigo-600 transition flex items-center gap-2">
+            <i class="fas fa-arrow-left"></i> Retour à la liste
+        </a>
+    </div>
+
+    <div class="max-w-3xl mx-auto bg-white p-8 rounded-2xl shadow-sm border border-slate-100">
+        
+        <div class="text-center mb-8">
+            <h2 class="text-2xl font-bold text-slate-800">Ajouter une nouvelle entreprise</h2>
+            <p class="text-slate-500 mt-1">Remplissez les informations ci-dessous pour créer un nouveau partenaire.</p>
+        </div>
+
+        <form action="/admin/companies/save" method="POST" enctype="multipart/form-data" class="space-y-6">
+            
+            <div class="bg-slate-50 p-6 rounded-xl border border-slate-100">
+                <h3 class="text-sm font-bold text-slate-700 uppercase tracking-wider mb-4 border-b border-slate-200 pb-2">Identité Visuelle</h3>
+                
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-2">Logo de l'entreprise</label>
+                    <div class="flex items-center gap-4">
+                        <div class="h-16 w-16 bg-white rounded-lg border border-dashed border-slate-300 flex items-center justify-center text-slate-400">
+                            <i class="fas fa-image text-2xl"></i>
+                        </div>
+                        <div class="flex-1">
+                            <input type="file" name="logo" accept="image/*" class="block w-full text-sm text-slate-500
+                                file:mr-4 file:py-2 file:px-4
+                                file:rounded-full file:border-0
+                                file:text-sm file:font-semibold
+                                file:bg-indigo-50 file:text-indigo-700
+                                hover:file:bg-indigo-100
+                            "/>
+                            <p class="text-xs text-slate-400 mt-1">Formats acceptés : PNG, JPG, JPEG (Max 2MB).</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="col-span-2">
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Nom de l'entreprise <span class="text-red-500">*</span></label>
+                    <input type="text" name="nom" required placeholder="Ex: Capgemini, Orange..." 
+                           class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Secteur d'activité</label>
+                    <input type="text" name="secteur" placeholder="Ex: Développement Web" 
+                           class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Ville <span class="text-red-500">*</span></label>
+                    <input type="text" name="ville" required placeholder="Ex: Casablanca" 
+                           class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Email professionnel <span class="text-red-500">*</span></label>
+                    <input type="email" name="email" required placeholder="contact@entreprise.com" 
+                           class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Téléphone</label>
+                    <input type="text" name="telephone" placeholder="+212 5..." 
+                           class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition">
+                </div>
+            </div>
+
+            <div class="pt-6 border-t border-slate-100 flex items-center justify-end gap-4">
+                <a href="/admin/companies" class="px-6 py-3 rounded-xl text-slate-600 hover:bg-slate-50 font-medium transition">Annuler</a>
+                <button type="submit" class="px-8 py-3 bg-indigo-600 text-white rounded-xl font-bold shadow-lg hover:bg-indigo-700 hover:shadow-xl transition flex items-center gap-2">
+                    <i class="fas fa-save"></i> Enregistrer
+                </button>
+            </div>
+
+        </form>
+    </div>
+
+{% endblock %}
