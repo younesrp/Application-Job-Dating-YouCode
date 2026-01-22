@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JobDating Admin</title>
+    <title>{% block title %}JobDating Admin{% endblock %}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -20,37 +20,46 @@
             <div class="h-20 flex items-center justify-center border-b border-white/10">
                 <h1 class="text-2xl font-bold tracking-widest">JOB<span class="text-blue-400">DATING</span>.</h1>
             </div>
+
             <nav class="flex-1 overflow-y-auto py-6 px-4 space-y-2">
-                <a href="/admin/dashboard" class="flex items-center px-4 py-3 rounded-xl bg-white/10 shadow-lg border border-white/5">
-        <i class="fas fa-th-large mr-3 text-blue-300"></i> 
+    
+    <a href="/admin/dashboard" class="flex items-center px-4 py-3 rounded-xl text-indigo-200 hover:bg-white/10 hover:text-white transition">
+        <i class="fas fa-th-large mr-3"></i> 
         <span class="font-medium">Dashboard</span>
     </a>
 
-    <a href="/admin/annonces" class="flex items-center px-4 py-3 rounded-xl text-indigo-200 hover:bg-white/5 hover:text-white transition">
+    <a href="/admin/annonces" class="flex items-center px-4 py-3 rounded-xl text-indigo-200 hover:bg-white/10 hover:text-white transition">
         <i class="fas fa-briefcase mr-3"></i> 
         <span class="font-medium">Annonces</span>
     </a>
-                <a href="/admin/entreprises" class="flex items-center px-4 py-3 rounded-xl text-indigo-200 hover:bg-white/5 hover:text-white transition">
-                    <i class="fas fa-building mr-3"></i> <span class="font-medium">Entreprises</span>
-                </a>
-                <a href="/admin/users" class="flex items-center px-4 py-3 rounded-xl text-indigo-200 hover:bg-white/5 hover:text-white transition">
-                    <i class="fas fa-users mr-3"></i> <span class="font-medium">Utilisateurs</span>
-                </a>
-            </nav>
+    
+   <a href="/admin/companies" class="flex items-center px-4 py-3 rounded-xl text-indigo-200 hover:bg-white/10 hover:text-white transition group">
+        <i class="fas fa-building mr-3 text-indigo-300 group-hover:text-white transition"></i> 
+        <span class="font-medium">Entreprises</span>
+    </a>
+    <a href="/admin/students" class="flex items-center px-4 py-3 rounded-xl text-indigo-200 hover:bg-white/10 hover:text-white transition">
+    <i class="fas fa-user-graduate mr-3"></i> 
+    <span class="font-medium">Apprenants</span>
+</a>
+<a href="/admin/candidatures" class="flex items-center px-4 py-3 rounded-xl text-indigo-200 hover:bg-white/10 hover:text-white transition">
+    <i class="fas fa-file-contract mr-3"></i> 
+    <span class="font-medium">Candidatures</span>
+</a>
+
+</nav>
         </aside>
 
         <div class="flex-1 flex flex-col overflow-hidden relative">
-            <header class="h-20 flex items-center justify-between px-8 py-4">
+            
+            <header class="h-20 flex items-center justify-between px-8 py-4 bg-white/50 backdrop-blur-sm">
                 <h2 class="text-2xl font-bold text-slate-800">Espace Admin</h2>
                 <div class="flex items-center gap-4">
-                    <button class="bg-white p-3 rounded-full shadow text-slate-400"><i class="fas fa-bell"></i></button>
-                    <div class="flex items-center gap-2">
-                        <img class="h-10 w-10 rounded-full border" src="https://ui-avatars.com/api/?name=Admin&background=random" alt="Admin">
-                    </div>
+                    <button class="p-2 bg-white rounded-full shadow-sm text-slate-400"><i class="fas fa-bell"></i></button>
+                    <img class="h-10 w-10 rounded-full border" src="https://ui-avatars.com/api/?name=Admin" alt="Admin">
                 </div>
             </header>
 
-            <main class="flex-1 overflow-x-hidden overflow-y-auto px-8 pb-8">
+            <main class="flex-1 overflow-x-hidden overflow-y-auto px-8 pb-8 pt-4">
                 {% block content %}{% endblock %}
             </main>
 
