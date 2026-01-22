@@ -1,161 +1,72 @@
+{# app/views/front/auth/login.twig #}
 {% extends "layout/layout.twig" %}
 
-                {% block content %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Page - Tailwind CSS</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Awesome pour les icônes -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-        .login-card {
-            backdrop-filter: blur(10px);
-            background: rgba(255, 255, 255, 0.1);
-        }
-        .input-icon {
-            color: #9CA3AF;
-        }
-    </style>
-</head>
-<body class="min-h-screen flex items-center justify-center p-4">
-    
-    <div class="login-card w-full max-w-md bg-white/90 backdrop-blur-sm rounded-2xl shadow-2xl overflow-hidden">
-        
-        <!-- Header -->
-        <div class="bg-gradient-to-r from-purple-600 to-blue-500 p-8 text-center">
-            <h1 class="text-3xl font-bold text-white">
-                <i class="fas fa-user-circle mr-2"></i>Welcome Back
-            </h1>
-            <p class="text-white/80 mt-2">                
-                
-                            
-            <!-- Message -->
-            <div id="message" class="mt-6 text-center">
-                {% if errors %}
-                <div class="alert alert-danger">
-                    <ul>
-                        {% for field, messages in errors %}
-                            {% for message in messages %}
-                                <li>{{ message }}</li>
-                            {% endfor %}
-                        {% endfor %}
-                    </ul>
-                </div>
-                {% endif %}
-            </div>
+{% block content %}
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-500 to-purple-600 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-8 bg-white p-10 rounded-xl shadow-2xl">
+        <div>
+            <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+                Connexion à votre compte
+            </h2>
+            <p class="mt-2 text-center text-sm text-gray-600">
+                Ou 
+                <a href="/register" class="font-medium text-indigo-600 hover:text-indigo-500">
+                    créez un nouveau compte
+                </a>
             </p>
         </div>
         
-        <!-- Form -->
-        <div class="p-8">
-            <form action="/dashboard" class="space-y-6">
-                <input type="hidden"  name="_token" value="{{csrf_token}}" >
-                <!-- Email Input -->
-                <div>
-                    <label class="block text-gray-700 font-medium mb-2">
-                        <i class="fas fa-envelope mr-2 text-blue-500"></i>Email or Username
-                    </label>
-                    <div class="relative">
-                        <input 
-                            type="text" 
-                            id="email"
-                            class="w-full px-4 py-3 pl-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
-                            placeholder="example@site.com"
-                            
-                        >
-                        <div class="absolute left-4 top-3.5 input-icon">
-                            <i class="fas fa-user"></i>
-                        </div>
+        {# Affichage des erreurs #}
+        {% if errors %}
+            <div class="bg-red-50 border-l-4 border-red-400 p-4">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm text-red-700">
+                            {% for field, messages in errors %}
+                                {% for message in messages %}
+                                    {{ message }}<br>
+                                {% endfor %}
+                            {% endfor %}
+                        </p>
                     </div>
                 </div>
-                
-                <!-- Password Input -->
-                <div>
-                    <label class="block text-gray-700 font-medium mb-2">
-                        <i class="fas fa-lock mr-2 text-blue-500"></i>Password
-                    </label>
-                    <div class="relative">
-                        <input 
-                            type="password" 
-                            id="password"
-                            class="w-full px-4 py-3 pl-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
-                            placeholder="••••••••"
-                            
-                        >
-                        <div class="absolute left-4 top-3.5 input-icon">
-                            <i class="fas fa-key"></i>
-                        </div>
-                        <button type="button" id="showPassword" class="absolute right-4 top-3.5 text-gray-500">
-                            <i class="far fa-eye"></i>
-                        </button>
-                    </div>
-                </div>
-                
-                <!-- Submit Button -->
-                <button type="submit" 
-                        class="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition duration-300 shadow-lg hover:shadow-xl">
-                    <i class="fas fa-sign-in-alt mr-2"></i>Login
-                </button>
-                
-                <!-- Divider -->
-                <div class="relative my-6">
-                    <div class="absolute inset-0 flex items-center">
-                        <div class="w-full border-t border-gray-300"></div>
-                    </div>
-                    <div class="relative flex justify-center text-sm">
-                        <span class="px-4 bg-white text-gray-500">Or</span>
-                    </div>
-                </div>
-                <div class="mt-12 text-center text-sm opacity-80">
-                    <p>Pas encore inscrire? <a href="/register" class="font-bold underline hover:no-underline">inscré-vous</a></p>
-                </div>
-            </form>
-        </div>
-        
-    </div>
-    
-    <!-- JavaScript -->
-    <script>
-        // Show/Hide Password
-        document.getElementById('showPassword').addEventListener('click', function() {
-            const passwordInput = document.getElementById('password');
-            const icon = this.querySelector('i');
+            </div>
+        {% endif %}
+
+        <form class="mt-8 space-y-6" action="/login" method="POST">
+            <input type="hidden" name="_token" value="{{ csrf_token }}">
             
-            if(passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-                icon.className = 'far fa-eye-slash';
-            } else {
-                passwordInput.type = 'password';
-                icon.className = 'far fa-eye';
-            }
-        });
-        
-        
-        function showMessage(text, color) {
-            const message = document.getElementById('message');
-            message.textContent = text;
-            message.className = `mt-6 text-center font-medium text-${color}-600`;
-            message.innerHTML = `<i class="fas fa-${color === 'green' ? 'check-circle' : 'exclamation-circle'} mr-2"></i>${text}`;
-        }
-        
-        // Effet d'animation
-        document.querySelectorAll('input').forEach(input => {
-            input.addEventListener('focus', function() {
-                this.parentElement.classList.add('ring-2', 'ring-blue-300');
-            });
-            input.addEventListener('blur', function() {
-                this.parentElement.classList.remove('ring-2', 'ring-blue-300');
-            });
-        });
-    </script>
-    
-</body>
-</html>
+            <div class="space-y-4">
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700">Adresse email</label>
+                    <input id="email" name="email" type="email" autocomplete="email" required class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="votre@email.com">
+                </div>
+                <div>
+                    <label for="password" class="block text-sm font-medium text-gray-700">Mot de passe</label>
+                    <input id="password" name="password" type="password" autocomplete="current-password" required class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="••••••••">
+                </div>
+            </div>
+
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <input id="remember-me" name="remember-me" type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                    <label for="remember-me" class="ml-2 block text-sm text-gray-900">
+                        Se souvenir de moi
+                    </label>
+                </div>
+            </div>
+
+            <div>
+                <button type="submit" class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Se connecter
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
 {% endblock %}

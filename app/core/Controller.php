@@ -2,10 +2,9 @@
 
 namespace App\core;
 use App\core\{View,Validator,Security,Session};
-use Twig\Environment;
-use Twig\Loader\FilesystemLoader;
-use Twig\TwigFunction;
-abstract class Controller
+
+
+class Controller
 {
     protected $view;
     protected $security;
@@ -69,6 +68,7 @@ abstract class Controller
 
     protected function redirect(string $url, int $statusCode = 302)
     {
+        error_log("Redirecting to: " . $url);
         http_response_code($statusCode);
         header("Location: $url");
         exit;
