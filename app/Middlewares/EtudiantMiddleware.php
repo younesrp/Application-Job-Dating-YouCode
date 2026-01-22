@@ -10,7 +10,7 @@ class EtudiantMiddleware implements MiddlewareInterface
             header('Location: /login');
             exit;
         }
-         if ($_SESSION['user_role'] !== 'etudiant') {
+         if ($_SESSION['user_role'] !== 'apprenant') {
             header('Location: /login');
             exit;
         }

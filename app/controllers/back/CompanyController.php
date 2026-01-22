@@ -40,6 +40,8 @@ class CompanyController extends Controller
             ];
             return $this->render('back/companies/index', $data);
         }
+
+
         // else $_SERVER['REQUEST_METHOD'] === 'POST'
         $this->verifyCsrf();
         
@@ -50,15 +52,19 @@ class CompanyController extends Controller
         $email = $_POST['email'] ?? '';
         $telephone = $_POST['telephone'] ?? '';
 
-        // ✅ Validation avec les nouvelles méthodes de sécurité
+        // Validation les champs
         $isValid = $this->validator->validate($_POST, [
-            'email' => 'required|email',
-            'password' => 'required|password'
+            'Nom' => "Oblier Nom d'entreprise!",
+            'Secteur' => "Oblier secteur d'entreprise!",
+            'Ville' => "Oblier secteur d'entreprise!",
+            'email' => "Oblier secteur d'entreprise!",
+            'telephone' => "Oblier secteur d'entreprise!",
+            'logo' => "Oblier image/logo d'entreprise!"
         ]);
-
+        var_dump($isValid);
         if (!$isValid) {
             $this->session->flash('errors', $this->validator->errors());
-            $this->redirect('/login');
+            $this->redirect('/back');
         }
 
         // ✅ Nettoyer les données avant utilisation
