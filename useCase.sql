@@ -72,3 +72,5 @@ CREATE TABLE candidatures (
         REFERENCES annonces(id)
         ON DELETE CASCADE
 );
+ALTER TABLE entreprises ADD COLUMN is_archived BOOLEAN DEFAULT FALSE;
+ALTER TABLE entreprises ADD COLUMN created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;

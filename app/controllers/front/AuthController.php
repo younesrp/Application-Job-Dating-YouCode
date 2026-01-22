@@ -89,6 +89,7 @@ class AuthController extends Controller
         $this->session->set('user_id', $user['id']);
         $this->session->set('user_email', $user['email']);
         $this->session->set('user_role', $user['role']);
+        $this->session->set('last_activity', time());
         // On combine prénom et nom pour l'affichage
         $this->session->set('user_name', trim(($user['prenom'] ?? '') . ' ' . ($user['nom'] ?? '')));
 
