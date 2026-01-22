@@ -3,7 +3,7 @@
 //  Dynamic Routes
 
 /********************/
-namespace App\Core;
+namespace App\core;
 
 use App\config\config;
 use App\core\Controller;

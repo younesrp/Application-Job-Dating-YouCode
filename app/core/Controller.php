@@ -1,23 +1,51 @@
 <?php
 
 namespace App\core;
-use App\core\{View,Validator,Security,Session};
+
+use App\core\{View, Validator, Security, Session};
+use Twig\Loader\FilesystemLoader;
+use Twig\Environment;
+use Twig\TwigFunction;
+
 class Controller
 {
-
     protected $view;
     protected $security;
     protected $session;
     protected $validator;
+    protected $twig;
 
     public function __construct()
     {
-        $this->view = new View();
         $this->security = new Security();
         $this->session = Session::getInstance();
         $this->validator = new Validator();
+
+        $loader = new FilesystemLoader(__DIR__ . '/../views'); 
+        
+        $this->twig = new Environment($loader, [
+            'cache' => false, 
+            'debug' => true
+        ]);
+
+        $this->twig->addFunction(new TwigFunction('asset', function ($path) {
+            
+            $projectDir = '/Application-Job-Dating-YouCode/public'; 
+            return $projectDir . '/' . ltrim($path, '/');
+        }));
     }
 
+    /**
+     * Render a Twig template
+     */
+    protected function render(string $view, array $data = []): void
+    {
+        echo $this->twig->render($view . '.twig', $data);
+    }
+
+    /**
+     * دالة لعرض صفحات PHP العادية (Legacy)
+     */
     protected function view(string $view, array $data = [])
     {
         extract($data);
@@ -27,11 +55,10 @@ class Controller
         if (!file_exists($viewPath)) {
             die("View not found: {$viewPath}");
         }
-
-        require $viewPath;
+        $this->render($viewPath, $data);
     }
 
-     protected function json(array $data, int $statusCode = 200)
+    protected function json(array $data, int $statusCode = 200)
     {
         http_response_code($statusCode);
         header('Content-Type: application/json');
@@ -39,28 +66,18 @@ class Controller
         exit;
     }
 
-    //return $this->redirect('/dashboard');
-
     protected function redirect(string $url, int $statusCode = 302)
     {
+        error_log("Redirecting to: " . $url);
         http_response_code($statusCode);
         header("Location: $url");
         exit;
     }
 
-    protected function render(string $view, array $data = []): void
-    {
-        View::render($view, $data); // ✅ View of Twig
-    }
     protected function verifyCsrf()
     {
         if (!$this->security->verifyCsrfToken($_POST['_token'] ?? '')) {
             $this->json(['error' => 'Invalid CSRF token'], 403);
-            // http_response_code(403);
         }
     }
-
-
-
-
 }

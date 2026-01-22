@@ -1,5 +1,5 @@
 {
-    "name": "lenovo/application-job-dating-you-code",
+    "name": "pc/application-job-dating-you-code",
     "autoload": {
         "psr-4": {
             "App\\": "app/"
@@ -7,12 +7,12 @@
     },
     "authors": [
         {
-            "name": "OUTERGA-MOUSTAFA",
-            "email": "outergamoustafa@gmail.com"
+            "name": "younesmouqla",
+            "email": "younesmouqla03@gmail.com"
         }
     ],
     "require": {
-        "twig/twig": "^3.22",
+        "twig/twig": "^3.19",
         "vlucas/phpdotenv": "^5.6"
     }
 }

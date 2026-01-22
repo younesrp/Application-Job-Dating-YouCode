@@ -3,24 +3,16 @@
 {% block title %}Ajouter une Entreprise{% endblock %}
 
 {% block styles %}
-    <link rel="stylesheet" href="/assets/css/style.css">
+<link rel="stylesheet" href="/assets/css/style.css">
 {% endblock %}
 
-{% block content %}
+{% block body %}
 <div class="container">
     <h1><i class="fas fa-building"></i> Gestion des Entreprises</h1>
-    
-    <button type="button" class="add-btn" id="addEntrepriseBtn">
-        <i class="fas fa-plus-circle"></i> Ajouter une Entreprise
-    </button>
-    
-    <div class="hidden-section" id="entrepriseSection">
         <h2 class="form-title"><i class="fas fa-file-alt"></i> Informations de l'Entreprise</h2>
         
         {# 1. لاحظ إضافة enctype و method #}
-        <form id="entrepriseForm" action="/Company" method="POST" enctype="multipart/form-data">
-            
-            {# 2. تصحيح اسم التوكن #}
+        <form id="entrepriseForm" action="/company" method="POST" enctype="multipart/form-data">
             <input type="hidden" name="_token" value="{{ csrf_token }}">
 
             <div class="form-grid">
@@ -81,10 +73,10 @@
                 </div>
             </div>
         </form>
-    </div>
 </div>
 {% endblock %}
 
 {% block scripts %}
-    <script src="/assets/js/script.js"></script>
+    {# استخدام دالة asset لاستدعاء السكربت #}
+    <script src="{{ asset('assets/js/script.js') }}"></script>
 {% endblock %}

@@ -7,8 +7,8 @@ class Middleware implements MiddlewareInterface
 {
     public function handle(): void
     {
-        if (isset($_SESSION['user'])) { // إذا مسجل دخول
-            header('Location: /dashboard'); // يوجهه لـ dashboard
+        if (isset($_SESSION['user'])) { 
+            header('Location: /dashboard'); 
             exit;
         }
     }

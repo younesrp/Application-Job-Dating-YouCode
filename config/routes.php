@@ -1,20 +1,20 @@
 <?php
-namespace App\config;
 
-// return [
-//     'GET' => [
-//         '/' => [Front::class, 'index'],
+use App\controllers\back\DashboardController;
+use App\controllers\back\AnnoncesController;
 
-//         'login' => [Back::class, 'showLogin'],
-//         'register' => [Back::class, 'showRegister'],
-//         'dashboard' => [Front::class, 'showDashboard'],
-//     ],
+// Dashboard
+$router->get('admin/dashboard', [DashboardController::class, 'index']);
 
-//     'POST' => [
-//         'login' => [Back::class, 'login'],
-//         'register' => [Back::class, 'register'],
-//         'wallet' => [Front::class, 'storeWallet'],
-//     ]
-// ];
+// Home page
+$router->get('/', function() {
+    echo "<h1>Bienvenue sur la page d'accueil !</h1>";
+});
 
-$router->get('/admin/dashboard', 'App\Controllers\Back\DashboardController', 'index');
+// Annonces routes
+$router->get('/admin/annonces', [AnnoncesController::class, 'index']);
+$router->get('/admin/annonces/create', [AnnoncesController::class, 'create']);
+$router->post('/admin/annonces/save', [AnnoncesController::class, 'save']);
+$router->get('/admin/annonces/delete/{id}', [AnnoncesController::class, 'delete']);
+$router->get('/admin/annonces/edit/{id}', [AnnoncesController::class, 'edit']);
+$router->post('/admin/annonces/update/{id}', [AnnoncesController::class, 'update']);

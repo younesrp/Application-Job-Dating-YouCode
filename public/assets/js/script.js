@@ -1,3 +1,4 @@
+
 document.addEventListener('DOMContentLoaded', function() {
     const addBtn = document.getElementById('addEntrepriseBtn');
     const entrepriseSection = document.getElementById('entrepriseSection');
@@ -7,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const logoInput = document.getElementById('logo');
     
     // Afficher/masquer la section
+
     addBtn.addEventListener('click', function() {
         if (entrepriseSection.style.display === 'block') {
             entrepriseSection.style.display = 'none';
@@ -14,6 +16,8 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             entrepriseSection.style.display = 'block';
             addBtn.innerHTML = '<i class="fas fa-eye-slash"></i> Masquer le formulaire';
+            // Réinitialiser le formulaire
+
             entrepriseForm.reset();
         }
     });
