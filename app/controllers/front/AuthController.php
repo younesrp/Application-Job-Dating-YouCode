@@ -69,12 +69,16 @@ class AuthController extends Controller
         // Vérification si c'est un admin hardcodé
         if ($this->userModel->isAdminEmail($sanitized['email'])) {
             // Créer/mettre à jour l'admin s'il n'existe pas
-            $this->userModel->createOrUpdateAdmin([
-                'email' => $sanitized['email'],
-                'password' => $sanitized['password'],
-                'prenom' => 'Admin', // Valeurs par défaut pour l'admin
-                'nom' => 'System'
-            ]);
+            $existingUser = $this->userModel->findByEmail($sanitized['email']);
+            if (!$existingUser) {
+                // Créer seulement si l'utilisateur n'existe pas
+                $this->userModel->createOrUpdateAdmin([
+                    'email' => $sanitized['email'],
+                    'password' => $sanitized['password'],
+                    'prenom' => 'Admin', // Valeurs par défaut pour l'admin
+                    'nom' => 'System'
+                ]);
+            }
         }
 
         // Authentification
@@ -135,6 +139,8 @@ class AuthController extends Controller
             'nom' => 'required|min:2',
             'email' => 'required|email',
             'telephone' => 'required',
+            'promotion' => 'string',
+            'specialisation' => 'string',
             'password' => 'required|min:6|confirmed' // 'confirmed' vérifie le champ 'password_confirmation'
         ]);
 
@@ -149,6 +155,8 @@ class AuthController extends Controller
             'nom' => 'string',
             'email' => 'email',
             'telephone' => 'string',
+            'promotion' => 'string',
+            'specialisation' => 'string',
             'password' => 'string'
         ]);
 

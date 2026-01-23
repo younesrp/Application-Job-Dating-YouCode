@@ -81,6 +81,14 @@ class Session
     }
 
     /**
+     * Récupère un flash message (alias pour flash)
+     */
+    public function getFlash(string $key)
+    {
+        return $this->flash($key);
+    }
+
+    /**
      * Régénère l'ID de session (sécurité)
      */
     public function regenerate(): void

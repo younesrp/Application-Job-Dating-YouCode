@@ -2,64 +2,34 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
+    <title>404 - Page introuvable</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}JobDating Admin{% endblock %}</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Poppins', sans-serif; }
-        .sidebar-gradient { background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%); }
-    </style>
 </head>
-<body class="bg-[#F3F4F6] text-slate-800">
+<body class="min-h-screen flex items-center justify-center bg-gray-100">
 
-    <div class="flex h-screen overflow-hidden">
-        
-        <aside class="w-72 sidebar-gradient text-white m-4 rounded-3xl shadow-2xl flex flex-col hidden md:flex">
-            <div class="h-20 flex items-center justify-center border-b border-white/10">
-                <h1 class="text-2xl font-bold tracking-widest">JOB<span class="text-blue-400">DATING</span>.</h1>
-            </div>
+    <div class="text-center p-6">
+        <h1 class="text-9xl font-extrabold text-green-600">404</h1>
 
-            <nav class="flex-1 overflow-y-auto py-6 px-4 space-y-2">
-    
-    <a href="/admin/dashboard" class="flex items-center px-4 py-3 rounded-xl text-indigo-200 hover:bg-white/10 hover:text-white transition">
-        <i class="fas fa-th-large mr-3"></i> 
-        <span class="font-medium">Dashboard</span>
-    </a>
+        <h2 class="text-3xl font-bold text-gray-800 mt-4">
+            Oups ! Page introuvable
+        </h2>
 
-    <a href="/admin/annonces" class="flex items-center px-4 py-3 rounded-xl text-indigo-200 hover:bg-white/10 hover:text-white transition">
-        <i class="fas fa-briefcase mr-3"></i> 
-        <span class="font-medium">Annonces</span>
-    </a>
-    <a href="/admin/companies" class="flex items-center px-4 py-3 rounded-xl text-indigo-200 hover:bg-white/10 hover:text-white transition">
-        <i class="fas fa-building mr-3"></i> 
-        <span class="font-medium">Entreprises</span>
-    </a>
+        <p class="text-gray-600 mt-2">
+            La page que vous cherchez n’existe pas ou a été déplacée.
+        </p>
 
-    <a href="/logout" class="flex items-center px-4 py-3 rounded-xl text-red-300 hover:bg-red-500/20 hover:text-white transition mt-8">
-        <i class="fas fa-sign-out-alt mr-3"></i> 
-        <span class="font-medium">Déconnexion</span>
-    </a>
+        <div class="mt-6 flex justify-center gap-4">
+            <a href="index.php"
+               class="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
+                🏠 Accueil
+            </a>
 
-</nav>
-        </aside>
-
-        <div class="flex-1 flex flex-col overflow-hidden relative">
-            
-            <header class="h-20 flex items-center justify-between px-8 py-4 bg-white/50 backdrop-blur-sm">
-                <h2 class="text-2xl font-bold text-slate-800">Espace Admin</h2>
-                <div class="flex items-center gap-4">
-                    <button class="p-2 bg-white rounded-full shadow-sm text-slate-400"><i class="fas fa-bell"></i></button>
-                    <img class="h-10 w-10 rounded-full border" src="https://ui-avatars.com/api/?name=Admin" alt="Admin">
-                </div>
-            </header>
-
-            <main class="flex-1 overflow-x-hidden overflow-y-auto px-8 pb-8 pt-4">
-                {% block content %}{% endblock %}
-            </main>
-
+            <button class="px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-200 transition">
+                ⬅ Retour
+            </button>
         </div>
     </div>
+
 </body>
 </html>

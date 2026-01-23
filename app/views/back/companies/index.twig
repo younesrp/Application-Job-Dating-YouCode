@@ -1,280 +1,76 @@
-{% extends 'back/layout.twig' %}
+{% extends "back/layout.twig" %}
+
+{% block title %}Gestion des Entreprises{% endblock %}
 
 {% block content %}
-<div class="max-w-7xl mx-auto">
-    <div class="flex justify-between items-center mb-6">
-        <h2 class="text-3xl font-bold text-slate-800">{{ title }}</h2>
-        <button onclick="openAddModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg shadow-lg transition flex items-center gap-2">
-            <i class="fas fa-plus"></i> Ajouter Entreprise
-        </button>
+
+    <div class="flex justify-between items-center mb-8">
+        <div>
+            <h2 class="text-3xl font-bold text-slate-800">Entreprises</h2>
+            <p class="text-slate-500">Gérez vos partenaires et employeurs.</p>
+        </div>
+        <a href="/admin/companies/create" class="bg-indigo-600 text-white px-6 py-3 rounded-xl shadow-lg hover:bg-indigo-700 transition">
+            <i class="fas fa-plus mr-2"></i> Ajouter une entreprise
+        </a>
     </div>
 
-    {% if success %}
-        <div class="bg-green-50 border-l-4 border-green-500 text-green-700 p-4 mb-4 rounded-lg animate-fade-in">
-            <i class="fas fa-check-circle mr-2"></i>{{ success }}
-        </div>
-    {% endif %}
-
-    {% if errors %}
-        <div class="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 mb-4 rounded-lg animate-fade-in">
-            {% for field, messages in errors %}
-                {% for message in messages %}
-                    <p><i class="fas fa-exclamation-circle mr-2"></i>{{ message }}</p>
-                {% endfor %}
-            {% endfor %}
-        </div>
-    {% endif %}
-
-    <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
-        <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white">
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+        <table class="w-full text-left">
+            <thead class="bg-slate-50 text-slate-500 text-xs uppercase">
                 <tr>
-                    <th class="px-6 py-4 text-left text-sm font-semibold">Logo</th>
-                    <th class="px-6 py-4 text-left text-sm font-semibold">Nom</th>
-                    <th class="px-6 py-4 text-left text-sm font-semibold">Secteur</th>
-                    <th class="px-6 py-4 text-left text-sm font-semibold">Ville</th>
-                    <th class="px-6 py-4 text-left text-sm font-semibold">Email</th>
-                    <th class="px-6 py-4 text-left text-sm font-semibold">Téléphone</th>
-                    <th class="px-6 py-4 text-left text-sm font-semibold">Statut</th>
-                    <th class="px-6 py-4 text-center text-sm font-semibold">Actions</th>
+                    <th class="px-6 py-4">Entreprise</th>
+                    <th class="px-6 py-4">Secteur / Ville</th>
+                    <th class="px-6 py-4">Contact</th>
+                    <th class="px-6 py-4 text-right">Actions</th>
                 </tr>
             </thead>
-            <tbody class="divide-y divide-gray-200">
+            <tbody class="divide-y divide-slate-100 text-sm">
+                
                 {% for company in companies %}
-                <tr class="hover:bg-gray-50 transition">
+                <tr class="hover:bg-slate-50 transition">
+                    
+                   <td class="px-6 py-4 font-bold text-slate-700">
+                    <div class="flex items-center gap-3">
+                        
+                        <img 
+src="http://localhost:8081/Application-Job-Dating-YouCode/public/assets/logos/{{ company.logo }}"     
+                   alt="{{ company.nom }}" 
+                            class="h-12 w-12 rounded-lg object-cover border border-slate-200 shadow-sm bg-white"
+                            
+                            السحر هنا: إلا مالقاش التصويرة، كيبدل المصدر لرابط الحروف أوتوماتيكياً
+                            onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name={{ company.nom }}&background=random&color=fff&size=128';"
+                        >
+
+                        <span class="text-base">{{ company.nom }}</span>
+                    </div>
+                </td>
+
                     <td class="px-6 py-4">
-                        {% if company.logo %}
-                            <img src="{{ company.logo }}" alt="{{ company.nom }}" class="h-12 w-12 object-contain rounded">
-                        {% else %}
-                            <div class="h-12 w-12 bg-gray-200 rounded flex items-center justify-center">
-                                <i class="fas fa-building text-gray-400"></i>
-                            </div>
-                        {% endif %}
+                        <p class="font-medium text-slate-800">{{ company.secteur }}</p>
+                        <p class="text-xs text-slate-400">{{ company.ville }}</p>
                     </td>
-                    <td class="px-6 py-4 text-sm font-medium">{{ company.nom }}</td>
-                    <td class="px-6 py-4 text-sm">{{ company.secteur }}</td>
-                    <td class="px-6 py-4 text-sm">{{ company.ville }}</td>
-                    <td class="px-6 py-4 text-sm text-blue-600">{{ company.email }}</td>
-                    <td class="px-6 py-4 text-sm">{{ company.telephone }}</td>
-                    <td class="px-6 py-4">
-                        {% if company.is_archived %}
-                            <span class="px-3 py-1 text-xs font-semibold rounded-full bg-gray-200 text-gray-700">Archivé</span>
-                        {% else %}
-                            <span class="px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-700">Actif</span>
-                        {% endif %}
+
+                    <td class="px-6 py-4 text-slate-500">
+                        <p>{{ company.email }}</p>
+                        <p class="text-xs">{{ company.telephone }}</p>
                     </td>
-                    <td class="px-6 py-4 text-center">
-                        <button type="button" class="edit-btn bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded-lg text-sm mr-2 transition" title="Modifier" data-id="{{ company.id }}" data-nom="{{ company.nom }}" data-secteur="{{ company.secteur }}" data-ville="{{ company.ville }}" data-email="{{ company.email }}" data-telephone="{{ company.telephone }}">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        {% if company.is_archived %}
-                            <button type="button" class="restore-btn bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-lg text-sm transition" title="Restaurer" data-id="{{ company.id }}" data-nom="{{ company.nom }}">
-                                <i class="fas fa-undo"></i>
-                            </button>
-                        {% else %}
-                            <button type="button" class="archive-btn bg-gray-500 hover:bg-gray-600 text-white px-3 py-1 rounded-lg text-sm transition" title="Archiver" data-id="{{ company.id }}" data-nom="{{ company.nom }}">
-                                <i class="fas fa-archive"></i>
-                            </button>
-                        {% endif %}
+
+                    <td class="px-6 py-4 text-right">
+                        <a href="/admin/companies/edit/{{ company.id }}" class="text-indigo-600 hover:bg-indigo-50 p-2 rounded"><i class="far fa-edit"></i></a>
+                        <a href="/admin/companies/delete/{{ company.id }}" class="text-red-600 hover:bg-red-50 p-2 rounded" onclick="return confirm('Supprimer cette entreprise ?')"><i class="far fa-trash-alt"></i></a>
+                    </td>
+                </tr>
+
+                {% else %}
+                <tr>
+                    <td colspan="4" class="text-center py-8 text-slate-400 italic">
+                        Aucune entreprise trouvée.
                     </td>
                 </tr>
                 {% endfor %}
+
             </tbody>
         </table>
     </div>
-</div>
 
-<!-- Modal Ajouter -->
-<div id="addModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4">
-        <form method="POST" action="/admin/companies/store" enctype="multipart/form-data">
-            <div class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-4 rounded-t-2xl flex justify-between items-center">
-                <h5 class="text-xl font-bold">Ajouter Entreprise</h5>
-                <button type="button" onclick="closeAddModal()" class="text-white hover:text-gray-200">
-                    <i class="fas fa-times text-2xl"></i>
-                </button>
-            </div>
-            <div class="p-6 space-y-4">
-                <input type="hidden" name="_token" value="{{ csrf_token }}">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Nom</label>
-                    <input type="text" name="nom" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent" required>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Secteur</label>
-                    <input type="text" name="secteur" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent" required>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Ville</label>
-                    <input type="text" name="ville" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent" required>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                    <input type="email" name="email" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent" required>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
-                    <input type="text" name="telephone" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent" required>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Logo</label>
-                    <input type="file" name="logo" accept="image/*" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
-                    <p class="text-xs text-gray-500 mt-1">Formats acceptés: JPG, PNG, GIF, WEBP (Max: 2MB)</p>
-                </div>
-            </div>
-            <div class="px-6 py-4 bg-gray-50 rounded-b-2xl flex justify-end gap-3">
-                <button type="button" onclick="closeAddModal()" class="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 rounded-lg transition">Annuler</button>
-                <button type="submit" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition">Ajouter</button>
-            </div>
-        </form>
-    </div>
-</div>
-
-<!-- Modal Modifier -->
-<div id="editModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4">
-        <form method="POST" id="editForm" enctype="multipart/form-data">
-            <div class="bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-6 py-4 rounded-t-2xl flex justify-between items-center">
-                <h5 class="text-xl font-bold">Modifier Entreprise</h5>
-                <button type="button" onclick="closeEditModal()" class="text-white hover:text-gray-200">
-                    <i class="fas fa-times text-2xl"></i>
-                </button>
-            </div>
-            <div class="p-6 space-y-4">
-                <input type="hidden" name="_token" value="{{ csrf_token }}">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Nom</label>
-                    <input type="text" name="nom" id="edit_nom" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent" required>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Secteur</label>
-                    <input type="text" name="secteur" id="edit_secteur" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent" required>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Ville</label>
-                    <input type="text" name="ville" id="edit_ville" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent" required>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                    <input type="email" name="email" id="edit_email" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent" required>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
-                    <input type="text" name="telephone" id="edit_telephone" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent" required>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Logo (Nouveau)</label>
-                    <input type="file" name="logo" accept="image/*" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
-                    <p class="text-xs text-gray-500 mt-1">Laissez vide pour garder le logo actuel</p>
-                </div>
-            </div>
-            <div class="px-6 py-4 bg-gray-50 rounded-b-2xl flex justify-end gap-3">
-                <button type="button" onclick="closeEditModal()" class="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 rounded-lg transition">Annuler</button>
-                <button type="submit" class="px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg transition">Modifier</button>
-            </div>
-        </form>
-    </div>
-</div>
-
-<script>
-// Notification toast
-function showNotification(message, type = 'success') {
-    const notification = document.createElement('div');
-    notification.className = `fixed top-4 right-4 px-6 py-4 rounded-lg shadow-lg z-50 transform transition-all duration-300 ${
-        type === 'success' ? 'bg-green-500' : 
-        type === 'error' ? 'bg-red-500' : 
-        type === 'warning' ? 'bg-yellow-500' : 'bg-blue-500'
-    } text-white`;
-    notification.innerHTML = `
-        <div class="flex items-center gap-3">
-            <i class="fas fa-${
-                type === 'success' ? 'check-circle' : 
-                type === 'error' ? 'exclamation-circle' : 
-                type === 'warning' ? 'exclamation-triangle' : 'info-circle'
-            } text-xl"></i>
-            <span>${message}</span>
-        </div>
-    `;
-    document.body.appendChild(notification);
-    
-    setTimeout(() => {
-        notification.style.opacity = '0';
-        setTimeout(() => notification.remove(), 300);
-    }, 5000);
-}
-
-function openAddModal() {
-    document.getElementById('addModal').classList.remove('hidden');
-}
-
-function closeAddModal() {
-    document.getElementById('addModal').classList.add('hidden');
-}
-
-function closeEditModal() {
-    document.getElementById('editModal').classList.add('hidden');
-}
-
-// Event listeners pour les boutons
-document.addEventListener('DOMContentLoaded', function() {
-    // Boutons Edit
-    document.querySelectorAll('.edit-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const id = this.dataset.id;
-            const nom = this.dataset.nom;
-            const secteur = this.dataset.secteur;
-            const ville = this.dataset.ville;
-            const email = this.dataset.email;
-            const telephone = this.dataset.telephone;
-            
-            document.getElementById('editForm').action = '/admin/companies/update/' + id;
-            document.getElementById('edit_nom').value = nom || '';
-            document.getElementById('edit_secteur').value = secteur || '';
-            document.getElementById('edit_ville').value = ville || '';
-            document.getElementById('edit_email').value = email || '';
-            document.getElementById('edit_telephone').value = telephone || '';
-            document.getElementById('editModal').classList.remove('hidden');
-        });
-    });
-    
-    // Boutons Archive
-    document.querySelectorAll('.archive-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const id = this.dataset.id;
-            const nom = this.dataset.nom;
-            
-            if (confirm(`Voulez-vous vraiment archiver l'entreprise "${nom}" ?\n\nCette action peut être annulée.`)) {
-                showNotification(`Archivage de "${nom}" en cours...`, 'warning');
-                window.location.href = '/admin/companies/archive/' + id;
-            }
-        });
-    });
-    
-    // Boutons Restore
-    document.querySelectorAll('.restore-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const id = this.dataset.id;
-            const nom = this.dataset.nom;
-            
-            if (confirm(`Voulez-vous restaurer l'entreprise "${nom}" ?`)) {
-                showNotification(`Restauration de "${nom}" en cours...`, 'info');
-                window.location.href = '/admin/companies/restore/' + id;
-            }
-        });
-    });
-});
-
-// Afficher les notifications au chargement de la page
-{% if success %}
-showNotification('{{ success|e('js') }}', 'success');
-{% endif %}
-
-{% if errors %}
-    {% for field, messages in errors %}
-        {% for message in messages %}
-showNotification('{{ message|e('js') }}', 'error');
-        {% endfor %}
-    {% endfor %}
-{% endif %}
-</script>
 {% endblock %}

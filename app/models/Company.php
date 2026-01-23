@@ -7,32 +7,41 @@ use App\core\Model;
 class Company extends Model {
     
     protected $table = 'entreprises';
-    protected $fillable = ['nom', 'secteur', 'ville', 'email', 'telephone', 'logo'];
-
-    public function countAll() {
-        $stmt = $this->pdo->query("SELECT COUNT(*) FROM {$this->table} WHERE is_archived = 0");
-        return (int) $stmt->fetchColumn();
-    }
 
     public function getAll() {
-        return $this->pdo->query("SELECT * FROM {$this->table} ORDER BY created_at DESC")->fetchAll();
-    }
-    
-    public function getOne($id) {
-        return $this->find($id);
+        return $this->pdo->query("SELECT * FROM {$this->table} ORDER BY id DESC")->fetchAll();
     }
 
-    public function emailExists($email) {
-        $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM {$this->table} WHERE email = ?");
-        $stmt->execute([$email]);
-        return $stmt->fetchColumn() > 0;
+    public function find($id) {
+        $stmt = $this->pdo->prepare("SELECT * FROM {$this->table} WHERE id = :id");
+        $stmt->execute([':id' => $id]);
+        return $stmt->fetch();
+    }
+    public function countAll() {
+        return (int) $this->pdo->query("SELECT COUNT(*) FROM {$this->table}")->fetchColumn();
     }
 
-    public function archive($id) {
-        return $this->update($id, ['is_archived' => 1]);
+    public function create($data) {
+        $sql = "INSERT INTO {$this->table} (nom, secteur, ville, email, telephone, logo) 
+                VALUES (:nom, :secteur, :ville, :email, :telephone, :logo)";
+        
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute($data);
     }
 
-    public function restore($id) {
-        return $this->update($id, ['is_archived' => 0]);
+    public function update($id, $data) {
+        $sql = "UPDATE {$this->table} 
+                SET nom = :nom, secteur = :secteur, ville = :ville, 
+                    email = :email, telephone = :telephone 
+                WHERE id = :id";
+                
+        $data['id'] = $id; 
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute($data);
+    }
+
+    public function delete($id) {
+        $stmt = $this->pdo->prepare("DELETE FROM {$this->table} WHERE id = :id");
+        return $stmt->execute([':id' => $id]);
     }
 }
