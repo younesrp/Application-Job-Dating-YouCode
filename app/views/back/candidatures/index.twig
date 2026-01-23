@@ -4,7 +4,6 @@
 
 {% block content %}
 
-<!-- Header -->
 <div class="mb-8">
     <h1 class="text-3xl font-bold text-slate-800 mb-2">
         <i class="fas fa-file-contract mr-2 text-blue-600"></i>
@@ -13,7 +12,6 @@
     <p class="text-slate-600">Consultez et gérez toutes les candidatures des apprenants</p>
 </div>
 
-<!-- Stats Cards -->
 <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
     <div class="bg-white rounded-lg p-4 border border-slate-200 shadow-sm">
         <div class="flex items-center justify-between">
@@ -56,7 +54,6 @@
     </div>
 </div>
 
-<!-- Table des Candidatures -->
 <div class="bg-white rounded-lg border border-slate-200 shadow-sm">
     {% if candidatures %}
         <div class="overflow-x-auto">
@@ -107,7 +104,7 @@
                             </td>
                             <td class="px-6 py-4 text-center">
                                 <button onclick="viewCandidature({{ candidature.id }})" 
-                                    class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded text-xs font-medium transition">
+                                    class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded text-xs font-medium transition shadow-sm border border-blue-700">
                                     <i class="fas fa-eye mr-1"></i>Voir
                                 </button>
                             </td>
@@ -125,105 +122,107 @@
     {% endif %}
 </div>
 
-<!-- Modal de Détail Candidature -->
-<div id="modalCandidatureDetail" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-    <div class="bg-white rounded-2xl shadow-2xl max-w-4xl w-full mx-4 max-h-screen overflow-y-auto">
-        <!-- Header -->
-        <div class="sticky top-0 bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-6 border-b border-slate-200">
-            <div class="flex justify-between items-center">
+<div id="modalCandidatureDetail" class="hidden fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div class="fixed inset-0 bg-gray-900/75 backdrop-blur-sm transition-opacity"></div>
+
+    <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
+        <div class="relative transform overflow-hidden rounded-2xl bg-white text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-5xl">
+            
+            <div class="flex items-center justify-between border-b border-gray-100 px-6 py-4 bg-white">
                 <div>
-                    <h2 class="text-2xl font-bold">Détail Candidature</h2>
-                    <p class="text-blue-100 text-sm mt-1" id="detailTitle"></p>
+                    <h3 class="text-xl font-bold text-gray-900" id="detailTitle">Détails de la candidature</h3>
+                    <p class="text-sm text-gray-500 mt-1">
+                        Reçue le <span id="detailDate" class="font-medium text-gray-700"></span>
+                    </p>
                 </div>
-                <button onclick="closeDetail()" class="p-2 hover:bg-white/20 rounded-lg transition">
-                    <i class="fas fa-times text-2xl"></i>
+                <button type="button" onclick="closeDetail()" class="rounded-full p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 transition focus:outline-none">
+                    <span class="sr-only">Fermer</span>
+                    <i class="fas fa-times text-xl"></i>
                 </button>
             </div>
-        </div>
 
-        <!-- Body -->
-        <div class="p-6 space-y-6">
-            <!-- Infos Apprenant -->
-            <div class="bg-slate-50 rounded-lg p-6 border border-slate-200">
-                <h3 class="font-bold text-slate-800 mb-4 flex items-center">
-                    <i class="fas fa-user mr-2 text-indigo-600"></i>
-                    Informations Apprenant
-                </h3>
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <p class="text-xs text-slate-500 font-semibold uppercase">Nom Complet</p>
-                        <p class="text-slate-800 font-medium" id="detailNom"></p>
+            <div class="px-6 py-6 bg-gray-50/50">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    
+                    <div class="lg:col-span-1 space-y-6">
+                        <div class="bg-white rounded-xl p-6 border border-gray-100 shadow-sm relative overflow-hidden">
+                            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-indigo-500 to-purple-500"></div>
+                            <div class="flex flex-col items-center text-center mb-6">
+                                <div class="h-20 w-20 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600 mb-3 border-2 border-indigo-100">
+                                    <i class="fas fa-user-graduate text-3xl"></i>
+                                </div>
+                                <h4 class="text-lg font-bold text-gray-900" id="detailNom"></h4>
+                                <span class="px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 text-xs font-semibold mt-2" id="detailPromotion"></span>
+                            </div>
+                            
+                            <div class="space-y-4 border-t border-gray-100 pt-4">
+                                <div class="flex items-start">
+                                    <i class="fas fa-envelope mt-1 w-5 text-gray-400 text-sm"></i>
+                                    <div class="ml-3">
+                                        <p class="text-xs text-gray-500 uppercase font-semibold">Email</p>
+                                        <p class="text-sm text-gray-900 break-all" id="detailEmail"></p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <i class="fas fa-phone mt-1 w-5 text-gray-400 text-sm"></i>
+                                    <div class="ml-3">
+                                        <p class="text-xs text-gray-500 uppercase font-semibold">Téléphone</p>
+                                        <p class="text-sm text-gray-900" id="detailTelephone"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div>
-                        <p class="text-xs text-slate-500 font-semibold uppercase">Promotion</p>
-                        <p class="text-slate-800 font-medium" id="detailPromotion"></p>
-                    </div>
-                    <div>
-                        <p class="text-xs text-slate-500 font-semibold uppercase">Email</p>
-                        <p class="text-slate-800 font-medium" id="detailEmail"></p>
-                    </div>
-                    <div>
-                        <p class="text-xs text-slate-500 font-semibold uppercase">Téléphone</p>
-                        <p class="text-slate-800 font-medium" id="detailTelephone"></p>
+
+                    <div class="lg:col-span-2 space-y-6">
+                        
+                        <div class="bg-white rounded-xl p-6 border border-gray-100 shadow-sm">
+                            <h4 class="text-sm font-bold text-gray-900 uppercase tracking-wide mb-4 flex items-center">
+                                <i class="fas fa-briefcase mr-2 text-emerald-500"></i> Poste visé
+                            </h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <span class="text-xs text-gray-500 block mb-1">Intitulé du poste</span>
+                                    <span class="text-lg font-semibold text-gray-900" id="detailTitreOffre"></span>
+                                </div>
+                                <div>
+                                    <span class="text-xs text-gray-500 block mb-1">Entreprise</span>
+                                    <span class="text-base font-medium text-gray-900 flex items-center">
+                                        <i class="far fa-building mr-2 text-gray-400"></i>
+                                        <span id="detailEntreprise"></span>
+                                    </span>
+                                </div>
+                                <div>
+                                    <span class="text-xs text-gray-500 block mb-1">Type de contrat</span>
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium bg-blue-50 text-blue-700" id="detailContrat">
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-xl p-6 border border-gray-100 shadow-sm flex-grow">
+                            <h4 class="text-sm font-bold text-gray-900 uppercase tracking-wide mb-4 flex items-center">
+                                <i class="fas fa-quote-left mr-2 text-purple-500"></i> Lettre de motivation
+                            </h4>
+                            <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                                <p class="text-gray-700 whitespace-pre-wrap text-sm leading-relaxed" id="detailMessage"></p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-end gap-3 pt-2">
+                            <button onclick="updateStatus('refusee')" class="px-4 py-2 bg-white border border-red-200 text-red-600 hover:bg-red-50 rounded-lg font-medium transition shadow-sm">
+                                <i class="fas fa-times mr-2"></i>Refuser
+                            </button>
+                            <button onclick="updateStatus('en_attente')" class="px-4 py-2 bg-white border border-yellow-200 text-yellow-600 hover:bg-yellow-50 rounded-lg font-medium transition shadow-sm">
+                                <i class="fas fa-clock mr-2"></i>En attente
+                            </button>
+                            <button onclick="updateStatus('validee')" class="px-6 py-2 bg-gradient-to-r from-emerald-500 to-teal-600 text-white hover:from-emerald-600 hover:to-teal-700 rounded-lg font-medium transition shadow-md">
+                                <i class="fas fa-check mr-2"></i>Valider la candidature
+                            </button>
+                        </div>
+
                     </div>
                 </div>
-            </div>
-
-            <!-- Infos Offre -->
-            <div class="bg-slate-50 rounded-lg p-6 border border-slate-200">
-                <h3 class="font-bold text-slate-800 mb-4 flex items-center">
-                    <i class="fas fa-briefcase mr-2 text-emerald-600"></i>
-                    Informations Offre
-                </h3>
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <p class="text-xs text-slate-500 font-semibold uppercase">Titre du Poste</p>
-                        <p class="text-slate-800 font-medium" id="detailTitreOffre"></p>
-                    </div>
-                    <div>
-                        <p class="text-xs text-slate-500 font-semibold uppercase">Entreprise</p>
-                        <p class="text-slate-800 font-medium" id="detailEntreprise"></p>
-                    </div>
-                    <div class="col-span-2">
-                        <p class="text-xs text-slate-500 font-semibold uppercase">Type de Contrat</p>
-                        <p class="text-slate-800 font-medium" id="detailContrat"></p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Message de Motivation -->
-            <div class="bg-slate-50 rounded-lg p-6 border border-slate-200">
-                <h3 class="font-bold text-slate-800 mb-4 flex items-center">
-                    <i class="fas fa-pen-fancy mr-2 text-purple-600"></i>
-                    Lettre de Motivation
-                </h3>
-                <div class="bg-white rounded p-4 border border-slate-200 max-h-40 overflow-y-auto">
-                    <p class="text-slate-700 whitespace-pre-wrap text-sm" id="detailMessage"></p>
-                </div>
-            </div>
-
-            <!-- Statut et Actions -->
-            <div class="bg-blue-50 rounded-lg p-6 border border-blue-200">
-                <h3 class="font-bold text-slate-800 mb-4 flex items-center">
-                    <i class="fas fa-tasks mr-2 text-blue-600"></i>
-                    Gérer Candidature
-                </h3>
-                <div class="flex gap-3">
-                    <button onclick="updateStatus('validee')" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded font-medium transition">
-                        <i class="fas fa-check mr-2"></i>Valider
-                    </button>
-                    <button onclick="updateStatus('refusee')" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded font-medium transition">
-                        <i class="fas fa-times mr-2"></i>Refuser
-                    </button>
-                    <button onclick="updateStatus('en_attente')" class="px-4 py-2 bg-yellow-600 hover:bg-yellow-700 text-white rounded font-medium transition">
-                        <i class="fas fa-clock mr-2"></i>En Attente
-                    </button>
-                </div>
-            </div>
-
-            <!-- Date -->
-            <div class="text-center text-slate-600 text-sm border-t border-slate-200 pt-4">
-                Candidature soumise le <span id="detailDate" class="font-medium"></span>
             </div>
         </div>
     </div>
@@ -257,7 +256,7 @@ function viewCandidature(id) {
     currentCandidatureId = id;
 
     // Remplir les infos
-    document.getElementById('detailTitle').textContent = data.annonce_titre + ' - ' + data.apprenant_prenom + ' ' + data.apprenant_nom;
+    // document.getElementById('detailTitle').textContent = data.annonce_titre + ' - ' + data.apprenant_prenom;
     document.getElementById('detailNom').textContent = data.apprenant_prenom + ' ' + data.apprenant_nom;
     document.getElementById('detailEmail').textContent = data.apprenant_email;
     document.getElementById('detailTelephone').textContent = data.apprenant_telephone || 'Non fourni';
@@ -286,8 +285,6 @@ function updateStatus(status) {
     const url = `/admin/candidatures/${currentCandidatureId}/status`;
     const payload = { statut: status };
     
-    console.log('Envoi requête:', { url, payload });
-    
     fetch(url, {
         method: 'POST',
         headers: {
@@ -297,40 +294,37 @@ function updateStatus(status) {
         body: JSON.stringify(payload)
     })
     .then(response => {
-        console.log('Réponse reçue, status:', response.status);
         if (!response.ok && response.status !== 200) {
-            const msg = `Erreur HTTP ${response.status}`;
-            console.error(msg);
-            return response.text().then(text => {
-                throw new Error(msg + ': ' + text);
-            });
+            return response.text().then(text => { throw new Error(text) });
         }
         return response.text();
     })
     .then(text => {
-        console.log('Texte reçu:', text);
         try {
             const data = JSON.parse(text);
-            console.log('JSON parsé:', data);
             if (data.success) {
-                showAlert('Statut mis à jour avec succès', 'success');
-                setTimeout(() => location.reload(), 1500);
+                // alert('Statut mis à jour avec succès'); 
+                location.reload();
             } else {
-                showAlert('Erreur: ' + (data.message || 'Impossible de mettre à jour'), 'error');
+                alert('Erreur: ' + (data.message || 'Impossible de mettre à jour'));
             }
         } catch (e) {
-            throw new Error('JSON invalide: ' + text);
+            location.reload(); // Au cas où le JSON est mal formé mais l'action a marché
         }
     })
     .catch(err => {
         console.error('Erreur fetch:', err);
-        showAlert('Erreur: ' + err.message, 'error');
+        alert('Une erreur est survenue.');
     });
 }
 
 // Fermer le modal en cliquant dehors
 document.getElementById('modalCandidatureDetail').addEventListener('click', function(e) {
-    if (e.target === this) closeDetail();
+    // On ferme seulement si on clique sur le fond gris (pas sur le contenu)
+    // Le premier div enfant est le backdrop, donc on vérifie si on clique sur le parent flex
+    if (e.target.classList.contains('flex') && e.target.classList.contains('items-center')) {
+        closeDetail();
+    }
 });
 
 // Fermer avec Échap
