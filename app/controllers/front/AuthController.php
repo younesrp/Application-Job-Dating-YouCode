@@ -28,11 +28,22 @@ class AuthController extends Controller
      */
     public function showLogin()
     {
+        // Redirect if already logged in
+        if ($this->session->get('user_id')) {
+            $role = $this->session->get('user_role');
+            if ($role === User::ROLE_ADMIN) {
+                $this->redirect('/admin/dashboard');
+            } else {
+                $this->redirect('/dashboard');
+            }
+        }
+
         $data = [
             'title' => 'Connexion',
             'csrf_token' => $this->security->generateCsrfToken(),
             'errors' => $this->session->flash('errors'),
             'success' => $this->session->flash('success'),
+            'timeout' => isset($_GET['timeout']) ? true : false
         ];
 
         $this->render('front/auth/login', $data);
@@ -111,6 +122,16 @@ class AuthController extends Controller
      */
     public function showRegister()
     {
+        // Redirect if already logged in
+        if ($this->session->get('user_id')) {
+            $role = $this->session->get('user_role');
+            if ($role === User::ROLE_ADMIN) {
+                $this->redirect('/admin/dashboard');
+            } else {
+                $this->redirect('/dashboard');
+            }
+        }
+
         $data = [
             'title' => 'Inscription',
             'csrf_token' => $this->security->generateCsrfToken(),

@@ -115,4 +115,35 @@ class JobController extends Controller
 
         $this->render('front/offres/detail', $data);
     }
+
+    /**
+     * Recherche AJAX des annonces
+     */
+    public function search()
+    {
+        header('Content-Type: application/json');
+        
+        $data = json_decode(file_get_contents('php://input'), true);
+        $query = trim($data['query'] ?? '');
+        
+        if (strlen($query) < 2) {
+            echo json_encode(['annonces' => []]);
+            return;
+        }
+        
+        $annonceModel = new Announcement();
+        $allAnnonces = $annonceModel->getAll();
+        
+        $results = array_filter($allAnnonces, function($annonce) use ($query) {
+            $searchIn = strtolower(
+                $annonce['titre'] . ' ' . 
+                $annonce['entreprise_nom'] . ' ' . 
+                $annonce['description'] . ' ' . 
+                ($annonce['competences'] ?? '')
+            );
+            return strpos($searchIn, strtolower($query)) !== false;
+        });
+        
+        echo json_encode(['annonces' => array_values($results)]);
+    }
 }

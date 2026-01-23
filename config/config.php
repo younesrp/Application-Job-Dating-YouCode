@@ -19,9 +19,9 @@ ini_set('session.use_only_cookies', 1);
 ini_set('session.cookie_secure', 0); // Mettre à 1 si HTTPS
 ini_set('session.cookie_samesite', 'Strict');
 
-// Durée de vie de la session (3h)
-ini_set('session.gc_maxlifetime', 3600*2);
-session_set_cookie_params(3600*2);
+// Durée de vie de la session (2h)
+ini_set('session.gc_maxlifetime', 7200);
+session_set_cookie_params(7200);
 
 // Démarrage de la session
 if (session_status() === PHP_SESSION_NONE) {
@@ -34,3 +34,15 @@ if (!isset($_SESSION['initiated'])) {
     session_regenerate_id(true);
     $_SESSION['initiated'] = true;
 }
+
+// Session timeout - 2 hours inactivity
+if (isset($_SESSION['last_activity'])) {
+    $inactive = time() - $_SESSION['last_activity'];
+    if ($inactive > 7200) { // 2 hours
+        session_unset();
+        session_destroy();
+        header('Location: /login?timeout=1');
+        exit();
+    }
+}
+$_SESSION['last_activity'] = time();

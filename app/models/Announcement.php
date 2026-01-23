@@ -43,6 +43,19 @@ class Announcement extends Model {
         return $this->pdo->query($sql)->fetchAll();
     }
 
+    public function search($query) {
+        $sql = "SELECT a.*, e.nom as entreprise_nom 
+                FROM {$this->table} a 
+                LEFT JOIN entreprises e ON a.entreprise_id = e.id 
+                WHERE (a.titre LIKE :query OR a.description LIKE :query)
+                AND a.is_deleted = 0
+                ORDER BY a.date_creation DESC";
+        
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([':query' => '%' . $query . '%']);
+        return $stmt->fetchAll();
+    }
+
     public function create($data)
     {
     

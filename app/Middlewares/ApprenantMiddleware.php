@@ -12,21 +12,29 @@ class ApprenantMiddleware implements MiddlewareInterface
     {
         $session = Session::getInstance();
         
-        // 1. Vérifier si l'utilisateur est connecté
+        // 1. Check if user is logged in
         if (!$session->has('user_id')) {
             $session->flash('errors', ['general' => ['Vous devez être connecté pour accéder à cette page.']]);
             header('Location: /login');
             exit;
         }
         
-        // 2. Vérifier si l'utilisateur a le rôle "apprenant"
+        // 2. Check session timeout (2 hours)
+        if (isset($_SESSION['last_activity'])) {
+            $inactive = time() - $_SESSION['last_activity'];
+            if ($inactive > 7200) {
+                $session->destroy();
+                header('Location: /login?timeout=1');
+                exit;
+            }
+        }
+        $_SESSION['last_activity'] = time();
+        
+        // 3. Check if user has apprenant role
         if ($session->get('user_role') !== User::ROLE_APPRENANT) {
-            // S'il n'est pas apprenant, on le redirige vers le dashboard admin
             $session->flash('errors', ['general' => ['Accès réservé aux apprenants.']]);
             header('Location: /admin/dashboard');
             exit;
         }
-        
-        // Si tout est bon, on continue vers la page demandée
     }
 }

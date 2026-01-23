@@ -4,10 +4,43 @@
 
 {% block content %}
 
+    <style>
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .annonce-card {
+            opacity: 0;
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+        
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .animate-header {
+            animation: slideInRight 0.8s ease-out;
+        }
+    </style>
+
     <!-- Header -->
-    <div class="relative w-full bg-gradient-to-r from-blue-600 to-indigo-600 rounded-3xl p-8 mb-10 text-white shadow-xl overflow-hidden">
+    <div class="animate-header relative w-full bg-gradient-to-r from-blue-600 to-indigo-600 rounded-3xl p-8 mb-10 text-white shadow-xl overflow-hidden">
         <div class="relative z-10">
-            <h2 class="text-3xl font-bold mb-2">Offres d'Emploi 💼</h2>
+            <h2 class="text-3xl font-bold mb-2">Offres d'Emploi</h2>
             <p class="text-blue-100">Découvrez {{ pagination.total_items }} opportunités professionnelles</p>
         </div>
         <div class="absolute top-0 right-0 -mt-4 -mr-4 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
@@ -37,9 +70,21 @@
         </div>
     </div>
     {% endif %}
-
+    {# recherch mostafa ajax#}
+    <div class="mb-6 relative max-w-2xl mx-auto">
+        <input 
+            type="text" 
+            id="searchInput" 
+            placeholder="Rechercher par titre ou description..." 
+            class="w-full px-4 py-3 pl-10 pr-10 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+        >
+        <i class="fas fa-search absolute left-3 top-4 text-slate-400"></i>
+        <div id="searchLoader" class="hidden absolute right-3 top-4">
+            <i class="fas fa-spinner fa-spin text-blue-600"></i>
+        </div>
+    </div>
     <!-- Annonces Grid -->
-    <div class="space-y-6">
+    <div class="space-y-6 results-Mostafa">
         {% if annonces|length > 0 %}
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {% for annonce in annonces %}
@@ -50,9 +95,9 @@
                         {% endif %}
                     {% endfor %}
 
-                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 hover:shadow-lg hover:border-blue-300 transition overflow-hidden flex flex-col">
+                    <div class="annonce-card bg-white rounded-2xl shadow-sm border border-slate-200 hover:shadow-lg hover:border-blue-300 transition overflow-hidden flex flex-col" style="animation-delay: {{ loop.index0 * 0.1 }}s">
                         <!-- Header Card -->
-                        <div class="px-6 py-5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white">
+                        <div class="card-header px-6 py-5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white">
                             <h3 class="font-bold text-lg mb-2">{{ annonce.titre }}</h3>
                             <p class="text-blue-100 flex items-center">
                                 <i class="fas fa-building mr-2"></i>
@@ -61,7 +106,7 @@
                         </div>
 
                         <!-- Content -->
-                        <div class="px-6 py-4 flex-grow">
+                        <div class="card-content px-6 py-4 flex-grow">
                             <p class="text-slate-700 text-sm mb-4 line-clamp-3">{{ annonce.description|slice(0, 150) }}...</p>
 
                             <!-- Tags -->
@@ -189,5 +234,112 @@
 
     <!-- Include Modal -->
     {% include "front/dashboard/modal-candidature.twig" %}
+
+    <script>
+    let searchTimeout;
+    const searchInput = document.getElementById('searchInput');
+    const searchLoader = document.getElementById('searchLoader');
+    const annonceCards = document.querySelectorAll('.results-Mostafa .grid > div');
+
+    // Store original annonces data
+    const annoncesData = [];
+    annonceCards.forEach((card, index) => {
+        const titre = card.querySelector('h3')?.textContent || '';
+        const description = card.querySelector('.line-clamp-3')?.textContent || '';
+        annoncesData.push({ element: card, titre, description, index });
+    });
+
+    searchInput.addEventListener('input', function() {
+        clearTimeout(searchTimeout);
+        const query = this.value.trim().toLowerCase();
+        
+        // If empty, show all
+        if (query.length === 0) {
+            annoncesData.forEach(data => {
+                data.element.style.display = '';
+                const header = data.element.querySelector('.card-header');
+                const content = data.element.querySelector('.card-content');
+                if (header) {
+                    header.className = 'card-header px-6 py-5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white';
+                }
+                if (content) {
+                    content.classList.remove('!bg-green-50');
+                }
+                resetHighlight(data.element);
+            });
+            return;
+        }
+        
+        if (query.length < 2) return;
+        
+        searchLoader.classList.remove('hidden');
+        
+        searchTimeout = setTimeout(() => {
+            searchLoader.classList.add('hidden');
+            
+            annoncesData.forEach(data => {
+                const titreMatch = data.titre.toLowerCase().includes(query);
+                const descMatch = data.description.toLowerCase().includes(query);
+                
+                const header = data.element.querySelector('.card-header');
+                const content = data.element.querySelector('.card-content');
+                
+                // Reset
+                if (header) {
+                    header.className = 'card-header px-6 py-5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white';
+                }
+                if (content) {
+                    content.classList.remove('!bg-green-50');
+                }
+                resetHighlight(data.element);
+                
+                if (titreMatch || descMatch) {
+                    // Show with green header
+                    data.element.style.display = '';
+                    if (header) {
+                        header.className = 'card-header px-6 py-5 bg-gradient-to-r from-green-400 to-green-600 text-white';
+                    }
+                    if (content) {
+                        content.classList.add('!bg-green-50');
+                    }
+                    
+                    // Highlight text
+                    if (titreMatch) {
+                        highlightText(data.element.querySelector('h3'), query);
+                    }
+                    if (descMatch) {
+                        highlightText(data.element.querySelector('.line-clamp-3'), query);
+                    }
+                } else {
+                    // Hide non-matches
+                    data.element.style.display = 'none';
+                }
+            });
+        }, 300);
+    });
+
+    function highlightText(element, query) {
+        if (!element) return;
+        const originalText = element.getAttribute('data-original') || element.textContent;
+        if (!element.getAttribute('data-original')) {
+            element.setAttribute('data-original', originalText);
+        }
+        
+        const regex = new RegExp(`(${escapeRegex(query)})`, 'gi');
+        const highlighted = originalText.replace(regex, '<mark class="bg-yellow-300 text-slate-900 px-1 rounded font-bold">$1</mark>');
+        element.innerHTML = highlighted;
+    }
+
+    function resetHighlight(card) {
+        const elements = card.querySelectorAll('[data-original]');
+        elements.forEach(el => {
+            el.textContent = el.getAttribute('data-original');
+        });
+    }
+    
+    function escapeRegex(string) {
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+    </script>
 
 {% endblock %}
