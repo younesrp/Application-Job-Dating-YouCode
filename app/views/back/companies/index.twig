@@ -44,7 +44,7 @@
                 <tr class="hover:bg-gray-50 transition">
                     <td class="px-6 py-4">
                         {% if company.logo %}
-                            <img src="/{{ company.logo }}" alt="{{ company.nom }}" class="h-12 w-12 object-contain rounded">
+                            <img src="{{ company.logo }}" alt="{{ company.nom }}" class="h-12 w-12 object-contain rounded">
                         {% else %}
                             <div class="h-12 w-12 bg-gray-200 rounded flex items-center justify-center">
                                 <i class="fas fa-building text-gray-400"></i>
@@ -64,15 +64,15 @@
                         {% endif %}
                     </td>
                     <td class="px-6 py-4 text-center">
-                        <button onclick="editCompany({{ company.id }}, '{{ company.nom|e('js') }}', '{{ company.secteur|e('js') }}', '{{ company.ville|e('js') }}', '{{ company.email|e('js') }}', '{{ company.telephone|e('js') }}', '{{ company.logo|default('')|e('js') }}')" class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded-lg text-sm mr-2 transition" title="Modifier">
+                        <button type="button" class="edit-btn bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded-lg text-sm mr-2 transition" title="Modifier" data-id="{{ company.id }}" data-nom="{{ company.nom }}" data-secteur="{{ company.secteur }}" data-ville="{{ company.ville }}" data-email="{{ company.email }}" data-telephone="{{ company.telephone }}">
                             <i class="fas fa-edit"></i>
                         </button>
                         {% if company.is_archived %}
-                            <button onclick="confirmRestore({{ company.id }}, '{{ company.nom|e('js') }}')" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-lg text-sm transition" title="Restaurer">
+                            <button type="button" class="restore-btn bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-lg text-sm transition" title="Restaurer" data-id="{{ company.id }}" data-nom="{{ company.nom }}">
                                 <i class="fas fa-undo"></i>
                             </button>
                         {% else %}
-                            <button onclick="confirmArchive({{ company.id }}, '{{ company.nom|e('js') }}')" class="bg-gray-500 hover:bg-gray-600 text-white px-3 py-1 rounded-lg text-sm transition" title="Archiver">
+                            <button type="button" class="archive-btn bg-gray-500 hover:bg-gray-600 text-white px-3 py-1 rounded-lg text-sm transition" title="Archiver" data-id="{{ company.id }}" data-nom="{{ company.nom }}">
                                 <i class="fas fa-archive"></i>
                             </button>
                         {% endif %}
@@ -211,33 +211,58 @@ function closeAddModal() {
     document.getElementById('addModal').classList.add('hidden');
 }
 
-function editCompany(id, nom, secteur, ville, email, telephone, logo) {
-    document.getElementById('editForm').action = '/admin/companies/update/' + id;
-    document.getElementById('edit_nom').value = nom || '';
-    document.getElementById('edit_secteur').value = secteur || '';
-    document.getElementById('edit_ville').value = ville || '';
-    document.getElementById('edit_email').value = email || '';
-    document.getElementById('edit_telephone').value = telephone || '';
-    document.getElementById('editModal').classList.remove('hidden');
-}
-
 function closeEditModal() {
     document.getElementById('editModal').classList.add('hidden');
 }
 
-function confirmArchive(id, nom) {
-    if (confirm(`Voulez-vous vraiment archiver l'entreprise "${nom}" ?\n\nCette action peut être annulée.`)) {
-        showNotification(`Archivage de "${nom}" en cours...`, 'warning');
-        window.location.href = '/admin/companies/archive/' + id;
-    }
-}
-
-function confirmRestore(id, nom) {
-    if (confirm(`Voulez-vous restaurer l'entreprise "${nom}" ?`)) {
-        showNotification(`Restauration de "${nom}" en cours...`, 'info');
-        window.location.href = '/admin/companies/restore/' + id;
-    }
-}
+// Event listeners pour les boutons
+document.addEventListener('DOMContentLoaded', function() {
+    // Boutons Edit
+    document.querySelectorAll('.edit-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const id = this.dataset.id;
+            const nom = this.dataset.nom;
+            const secteur = this.dataset.secteur;
+            const ville = this.dataset.ville;
+            const email = this.dataset.email;
+            const telephone = this.dataset.telephone;
+            
+            document.getElementById('editForm').action = '/admin/companies/update/' + id;
+            document.getElementById('edit_nom').value = nom || '';
+            document.getElementById('edit_secteur').value = secteur || '';
+            document.getElementById('edit_ville').value = ville || '';
+            document.getElementById('edit_email').value = email || '';
+            document.getElementById('edit_telephone').value = telephone || '';
+            document.getElementById('editModal').classList.remove('hidden');
+        });
+    });
+    
+    // Boutons Archive
+    document.querySelectorAll('.archive-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const id = this.dataset.id;
+            const nom = this.dataset.nom;
+            
+            if (confirm(`Voulez-vous vraiment archiver l'entreprise "${nom}" ?\n\nCette action peut être annulée.`)) {
+                showNotification(`Archivage de "${nom}" en cours...`, 'warning');
+                window.location.href = '/admin/companies/archive/' + id;
+            }
+        });
+    });
+    
+    // Boutons Restore
+    document.querySelectorAll('.restore-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const id = this.dataset.id;
+            const nom = this.dataset.nom;
+            
+            if (confirm(`Voulez-vous restaurer l'entreprise "${nom}" ?`)) {
+                showNotification(`Restauration de "${nom}" en cours...`, 'info');
+                window.location.href = '/admin/companies/restore/' + id;
+            }
+        });
+    });
+});
 
 // Afficher les notifications au chargement de la page
 {% if success %}

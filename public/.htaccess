@@ -1,7 +1,14 @@
 RewriteEngine On
 
-# Rediriger vers le dossier public
- RewriteCond %{REQUEST_FILENAME} !-f
- RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ public/index.php [QSA,L]
- ErrorDocument 404 /404.php
+# Permettre l'accès direct aux fichiers statiques (images, CSS, JS)
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule ^ - [L]
+
+# Permettre l'accès aux dossiers
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Rediriger tout le reste vers index.php
+RewriteRule ^(.*)$ index.php [QSA,L]
+
+ErrorDocument 404 /404.php
