@@ -12,6 +12,7 @@ use App\core\Router;
 use App\controllers\front\AuthController;
 use App\controllers\front\CandidatureController;
 use App\controllers\front\DashboardController as FrontDashboardController;
+use App\controllers\front\JobController;
 use App\controllers\back\DashboardController as AdminDashboardController;
 use App\Middlewares\{AuthMiddleware, AdminMiddleware, ApprenantMiddleware};
 
@@ -33,6 +34,7 @@ require_once __DIR__ . '/../config/routes.php';
  $router->get('/candidatures', [FrontDashboardController::class, 'candidatures'], [ApprenantMiddleware::class]);
  $router->get('/profil', [FrontDashboardController::class, 'profil'], [ApprenantMiddleware::class]);
  $router->post('/profil/update', [FrontDashboardController::class, 'updateProfil'], [ApprenantMiddleware::class]);
+ $router->get('/offres', [JobController::class, 'index'], [ApprenantMiddleware::class]);
  $router->get('/offres/{id}', [FrontDashboardController::class, 'detailOffre'], [ApprenantMiddleware::class]);
  $router->get('/admin/dashboard', [AdminDashboardController::class, 'index'], [AdminMiddleware::class]);
  $router->get('/admin/candidatures', [AdminDashboardController::class, 'candidatures'], [AdminMiddleware::class]);
