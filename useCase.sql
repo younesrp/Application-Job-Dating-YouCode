@@ -2,11 +2,15 @@ CREATE DATABASE job_dating_youcode;
 USE job_dating_youcode;
 
 CREATE TABLE users (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    email VARCHAR(150) UNIQUE NOT NULL,
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    email VARCHAR(100) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
-    role ENUM('admin','apprenant') NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    role ENUM('admin', 'etudiant') DEFAULT 'etudiant',
+    nom VARCHAR(50),
+    prenom VARCHAR(50),
+    telephone VARCHAR(20),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 INSERT INTO users (email, password, role, nom, prenom) 
 VALUES ('admin@youcode.ma', '$2y$10$YourHashedPasswordHere', 'admin', 'Admin', 'YouCode');
@@ -18,8 +22,7 @@ CREATE TABLE admins (
         REFERENCES users(id)
         ON DELETE CASCADE
 );
-CREATE TABLE apprenants ( 
-
+CREATE TABLE apprenants (
     user_id INT PRIMARY KEY,
     nom VARCHAR(100),
     prenom VARCHAR(100),
