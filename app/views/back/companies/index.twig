@@ -13,7 +13,6 @@
         <div class="bg-green-50 border-l-4 border-green-500 text-green-700 p-4 mb-4 rounded-lg animate-fade-in">
             <i class="fas fa-check-circle mr-2"></i>{{ success }}
         </div>
-        <script>showNotification('{{ success }}', 'success');</script>
     {% endif %}
 
     {% if errors %}
@@ -21,7 +20,6 @@
             {% for field, messages in errors %}
                 {% for message in messages %}
                     <p><i class="fas fa-exclamation-circle mr-2"></i>{{ message }}</p>
-                    <script>showNotification('{{ message }}', 'error');</script>
                 {% endfor %}
             {% endfor %}
         </div>
@@ -240,5 +238,18 @@ function confirmRestore(id, nom) {
         window.location.href = '/admin/companies/restore/' + id;
     }
 }
+
+// Afficher les notifications au chargement de la page
+{% if success %}
+showNotification('{{ success|e('js') }}', 'success');
+{% endif %}
+
+{% if errors %}
+    {% for field, messages in errors %}
+        {% for message in messages %}
+showNotification('{{ message|e('js') }}', 'error');
+        {% endfor %}
+    {% endfor %}
+{% endif %}
 </script>
 {% endblock %}
