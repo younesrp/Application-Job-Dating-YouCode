@@ -16,7 +16,8 @@ CREATE TABLE admins (
         REFERENCES users(id)
         ON DELETE CASCADE
 );
-CREATE TABLE apprenants (
+CREATE TABLE apprenants ( 
+    
     user_id INT PRIMARY KEY,
     nom VARCHAR(100),
     prenom VARCHAR(100),
