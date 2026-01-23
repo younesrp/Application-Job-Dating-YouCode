@@ -30,7 +30,7 @@ $router->post('/admin/candidatures/update/{id}', [CandidatureController::class, 
 
 
 // الطريقة 1: باستعمال ::class (هي اللي كننصحك بيها، بروفيسيونيل)
-$router->get('admin/dashboard', [DashboardController::class, 'index']);
+$router->get('/admin/dashboard', [DashboardController::class, 'index']);
 
 // أو الطريقة 2: بالكتابة المباشرة (إلا ما بغيتيش دير use الفوق)
 // $router->get('admin/dashboard', ['App\controllers\back\DashboardController', 'index']);

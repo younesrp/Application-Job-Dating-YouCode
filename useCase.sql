@@ -12,8 +12,6 @@ CREATE TABLE users (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
-
--- Créez un compte admin hardcodé (optionnel)
 INSERT INTO users (email, password, role, nom, prenom) 
 VALUES ('admin@youcode.ma', '$2y$10$YourHashedPasswordHere', 'admin', 'Admin', 'YouCode');
 CREATE TABLE admins (

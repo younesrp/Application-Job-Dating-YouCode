@@ -58,7 +58,7 @@ class User extends Model
     }
     
     /**
-     * Crée un nouvel apprenant
+     * Crée un nouvel apprenant et son entrée dans la table apprenants
      */
     public function createApprenant(array $data): int
     {
@@ -68,15 +68,35 @@ class User extends Model
         // Hash du mot de passe
         $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
         
-        // Filtrer les données pour n'inclure que les champs autorisés
+        // Filtrer les données pour n'inclure que les champs autorisés dans users
         $filteredData = [];
-        foreach ($this->fillable as $field) {
+        $userFields = ['prenom', 'nom', 'email', 'telephone', 'password', 'role'];
+        
+        foreach ($userFields as $field) {
             if (isset($data[$field])) {
                 $filteredData[$field] = $data[$field];
             }
         }
         
-        return $this->create($filteredData);
+        // Créer l'utilisateur dans la table users
+        $userId = $this->create($filteredData);
+        
+        // Créer l'entrée dans la table apprenants si l'utilisateur a été créé avec succès
+        if ($userId) {
+            $apprentData = [
+                'user_id' => $userId,
+                'nom' => $data['nom'] ?? '',
+                'prenom' => $data['prenom'] ?? '',
+                'promotion' => $data['promotion'] ?? '',
+                'specialisation' => $data['specialisation'] ?? ''
+            ];
+            
+            // Insérer dans la table apprenants
+            $stmt = $this->pdo->prepare("INSERT INTO apprenants (user_id, nom, prenom, promotion, specialisation) VALUES (:user_id, :nom, :prenom, :promotion, :specialisation)");
+            $stmt->execute($apprentData);
+        }
+        
+        return $userId;
     }
     
     /**
