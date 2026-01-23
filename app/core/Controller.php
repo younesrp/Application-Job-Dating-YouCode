@@ -4,6 +4,9 @@ namespace App\core;
 use App\core\{View,Validator,Security,Session};
 
 
+
+
+
 class Controller
 {
     protected $view;
@@ -54,7 +57,6 @@ class Controller
 
     protected function redirect(string $url, int $statusCode = 302)
     {
-        error_log("Redirecting to: " . $url);
         http_response_code($statusCode);
         header("Location: $url");
         exit;

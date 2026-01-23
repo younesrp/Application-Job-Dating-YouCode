@@ -1,263 +1,280 @@
-{% extends "layout/layout.twig" %}
+{% extends "front/layout.twig" %}
+
+{% block title %}Dashboard Apprenant - JobDating{% endblock %}
 
 {% block content %}
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tableau de bord Apprenant - YouCode</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-        }
-        .glass-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-    </style>
-</head>
-<body class="min-h-screen p-4 md:p-6">
-    
-    <div class="max-w-7xl mx-auto">
-        <!-- Header -->
-        <div class="glass-card rounded-2xl shadow-2xl p-6 mb-6 text-white">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center">
-                <div>
-                    <h1 class="text-3xl font-bold mb-2">
-                        <i class="fas fa-user-graduate mr-3"></i>
-                        Bienvenue, {{ user.prenom }} {{ user.nom }} !
-                    </h1>
-                    <p class="text-white/80">Votre espace apprenant YouCode</p>
-                    <div class="mt-3 flex items-center text-sm">
-                        <i class="fas fa-envelope mr-2"></i>
-                        {{ user.email }}
-                        <span class="ml-4 px-3 py-1 bg-blue-500/30 rounded-full text-xs">
-                            <i class="fas fa-user mr-1"></i> Apprenant
-                        </span>
-                    </div>
-                </div>
-                <div class="mt-4 md:mt-0">
-                    <a href="/logout" 
-                       class="inline-flex items-center px-5 py-3 bg-red-500 hover:bg-red-600 text-white rounded-lg transition">
-                        <i class="fas fa-sign-out-alt mr-2"></i>
-                        Déconnexion
-                    </a>
-                </div>
-            </div>
+
+    <!-- Header Welcome -->
+    <div class="relative w-full bg-gradient-to-r from-blue-600 to-indigo-600 rounded-3xl p-8 mb-10 text-white shadow-xl overflow-hidden">
+        <div class="relative z-10">
+            <h2 class="text-3xl font-bold mb-2">Bienvenue, {{ user.name }}! 👋</h2>
+            <p class="text-blue-100">Découvrez les meilleures opportunités professionnelles pour votre carrière</p>
         </div>
-        
-        <!-- Stats Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition">
-                <div class="flex items-center">
-                    <div class="bg-blue-100 p-4 rounded-xl mr-4">
-                        <i class="fas fa-briefcase text-2xl text-blue-600"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-3xl font-bold text-gray-800">15</h3>
-                        <p class="text-gray-600">Offres disponibles</p>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition">
-                <div class="flex items-center">
-                    <div class="bg-green-100 p-4 rounded-xl mr-4">
-                        <i class="fas fa-building text-2xl text-green-600"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-3xl font-bold text-gray-800">8</h3>
-                        <p class="text-gray-600">Entreprises</p>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition">
-                <div class="flex items-center">
-                    <div class="bg-purple-100 p-4 rounded-xl mr-4">
-                        <i class="fas fa-calendar-check text-2xl text-purple-600"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-3xl font-bold text-gray-800">3</h3>
-                        <p class="text-gray-600">Entretiens planifiés</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Main Content -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <!-- Left Column - Quick Actions -->
-            <div class="lg:col-span-2">
-                <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-                        <i class="fas fa-bolt text-yellow-500 mr-3"></i>
-                        Actions rapides
-                    </h2>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <a href="/offres" 
-                           class="group p-5 border border-blue-200 rounded-xl hover:bg-blue-50 transition-all hover:scale-105">
-                            <div class="flex items-center">
-                                <div class="bg-blue-100 p-3 rounded-lg mr-4">
-                                    <i class="fas fa-search text-blue-600"></i>
-                                </div>
-                                <div>
-                                    <h3 class="font-semibold text-gray-800 group-hover:text-blue-600">Rechercher offres</h3>
-                                    <p class="text-sm text-gray-600">Trouvez votre stage ou emploi</p>
-                                </div>
-                            </div>
-                        </a>
-                        
-                        <a href="/profil" 
-                           class="group p-5 border border-green-200 rounded-xl hover:bg-green-50 transition-all hover:scale-105">
-                            <div class="flex items-center">
-                                <div class="bg-green-100 p-3 rounded-lg mr-4">
-                                    <i class="fas fa-user-edit text-green-600"></i>
-                                </div>
-                                <div>
-                                    <h3 class="font-semibold text-gray-800 group-hover:text-green-600">Mon profil</h3>
-                                    <p class="text-sm text-gray-600">Complétez vos informations</p>
-                                </div>
-                            </div>
-                        </a>
-                        
-                        <a href="/cv" 
-                           class="group p-5 border border-purple-200 rounded-xl hover:bg-purple-50 transition-all hover:scale-105">
-                            <div class="flex items-center">
-                                <div class="bg-purple-100 p-3 rounded-lg mr-4">
-                                    <i class="fas fa-file-alt text-purple-600"></i>
-                                </div>
-                                <div>
-                                    <h3 class="font-semibold text-gray-800 group-hover:text-purple-600">Mon CV</h3>
-                                    <p class="text-sm text-gray-600">Téléchargez ou mettez à jour</p>
-                                </div>
-                            </div>
-                        </a>
-                        
-                        <a href="/entretiens" 
-                           class="group p-5 border border-red-200 rounded-xl hover:bg-red-50 transition-all hover:scale-105">
-                            <div class="flex items-center">
-                                <div class="bg-red-100 p-3 rounded-lg mr-4">
-                                    <i class="fas fa-calendar-alt text-red-600"></i>
-                                </div>
-                                <div>
-                                    <h3 class="font-semibold text-gray-800 group-hover:text-red-600">Mes entretiens</h3>
-                                    <p class="text-sm text-gray-600">Voir mes rendez-vous</p>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-                
-                <!-- Recent Activities -->
-                <div class="bg-white rounded-xl shadow-lg p-6">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-                        <i class="fas fa-history text-gray-600 mr-3"></i>
-                        Activités récentes
-                    </h2>
-                    
-                    <div class="space-y-4">
-                        <div class="flex items-center p-3 border-l-4 border-blue-500 bg-blue-50 rounded-r">
-                            <i class="fas fa-check-circle text-green-500 mr-3"></i>
-                            <div>
-                                <p class="font-medium">Candidature envoyée</p>
-                                <p class="text-sm text-gray-600">Développeur Web chez TechCorp</p>
-                            </div>
-                            <span class="ml-auto text-sm text-gray-500">Il y a 2 jours</span>
-                        </div>
-                        
-                        <div class="flex items-center p-3 border-l-4 border-green-500 bg-green-50 rounded-r">
-                            <i class="fas fa-calendar-plus text-blue-500 mr-3"></i>
-                            <div>
-                                <p class="font-medium">Entretien planifié</p>
-                                <p class="text-sm text-gray-600">Avec Innovate Solutions</p>
-                            </div>
-                            <span class="ml-auto text-sm text-gray-500">Demain à 10h</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Right Column - Profile & Notifications -->
+        <div class="absolute top-0 right-0 -mt-4 -mr-4 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
+        <div class="absolute bottom-0 right-20 -mb-4 w-24 h-24 bg-white/10 rounded-full blur-xl"></div>
+    </div>
+
+    {% if accepted_application %}
+    <!-- Alert Message -->
+    <div class="bg-green-50 border-l-4 border-green-600 p-6 rounded-lg mb-8 shadow-sm">
+        <div class="flex items-start">
+            <i class="fas fa-check-circle text-green-600 text-2xl mr-4 mt-1"></i>
             <div>
-                <!-- Profile Card -->
-                <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
-                    <h3 class="text-xl font-bold text-gray-800 mb-4">Mon profil</h3>
-                    <div class="text-center mb-4">
-                        <div class="inline-block p-4 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full">
-                            <i class="fas fa-user text-white text-4xl"></i>
-                        </div>
-                        <h4 class="font-bold text-gray-800 mt-3">{{ user.prenom }} {{ user.nom }}</h4>
-                        <p class="text-gray-600 text-sm">Apprenant YouCode</p>
-                    </div>
-                    
-                    <div class="space-y-3">
-                        <div class="flex items-center">
-                            <i class="fas fa-envelope text-gray-400 mr-3"></i>
-                            <span class="text-gray-700">{{ user.email }}</span>
-                        </div>
-                        <div class="flex items-center">
-                            <i class="fas fa-phone text-gray-400 mr-3"></i>
-                            <span class="text-gray-700">+212 6 XX XX XX XX</span>
-                        </div>
-                        <div class="flex items-center">
-                            <i class="fas fa-calendar text-gray-400 mr-3"></i>
-                            <span class="text-gray-700">Membre depuis Mars 2024</span>
-                        </div>
-                    </div>
-                    
-                    <button class="w-full mt-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg font-medium hover:opacity-90 transition">
-                        <i class="fas fa-edit mr-2"></i> Modifier le profil
-                    </button>
-                </div>
-                
-                <!-- Notifications -->
-                <div class="bg-white rounded-xl shadow-lg p-6">
-                    <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
-                        <i class="fas fa-bell text-yellow-500 mr-3"></i>
-                        Notifications
-                    </h3>
-                    
-                    <div class="space-y-3">
-                        <div class="p-3 bg-yellow-50 rounded-lg">
-                            <p class="font-medium text-sm">Nouvelle offre disponible</p>
-                            <p class="text-xs text-gray-600">Développeur Full Stack</p>
-                        </div>
-                        
-                        <div class="p-3 bg-blue-50 rounded-lg">
-                            <p class="font-medium text-sm">Rappel d'entretien</p>
-                            <p class="text-xs text-gray-600">Demain à 14h</p>
-                        </div>
-                    </div>
-                </div>
+                <h3 class="text-green-800 font-bold text-lg mb-1">Félicitations! 🎉</h3>
+                <p class="text-green-700 mb-2">Vous avez accepté l'offre: <strong>{{ accepted_application.titre }}</strong></p>
+                <p class="text-green-600 text-sm">Vous ne pouvez plus postuler à d'autres offres. Concentrez-vous sur cette nouvelle opportunité!</p>
             </div>
-        </div>
-        
-        <!-- Footer -->
-        <div class="mt-8 text-center text-white/60 text-sm">
-            <p>© 2024 YouCode Job Dating - Plateforme pour apprenants</p>
         </div>
     </div>
+    {% endif %}
     
-    <script>
-        // Animation pour les cartes
-        document.querySelectorAll('.group').forEach(card => {
-            card.addEventListener('mouseenter', function() {
-                this.style.transform = 'translateY(-5px)';
-            });
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+        
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 hover:shadow-md transition">
+            <div class="flex justify-between items-start">
+                <div>
+                    <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Offres Disponibles</p>
+                    <h3 class="text-3xl font-bold text-slate-800 mt-2">{{ stats.recommended_jobs }}</h3>
+                </div>
+                <div class="p-3 bg-blue-50 rounded-xl text-blue-600">
+                    <i class="fas fa-briefcase text-xl"></i>
+                </div>
+            </div>
+            <p class="text-xs text-blue-500 mt-4 font-medium flex items-center">
+                <i class="fas fa-arrow-up mr-1"></i> À explorer
+            </p>
+        </div>
+
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 hover:shadow-md transition">
+            <div class="flex justify-between items-start">
+                <div>
+                    <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Candidatures</p>
+                    <h3 class="text-3xl font-bold text-slate-800 mt-2">{{ stats.applications_sent }}</h3>
+                </div>
+                <div class="p-3 bg-green-50 rounded-xl text-green-600">
+                    <i class="fas fa-paper-plane text-xl"></i>
+                </div>
+            </div>
+            <p class="text-xs text-green-500 mt-4 font-medium">Envoyées</p>
+        </div>
+
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 hover:shadow-md transition">
+            <div class="flex justify-between items-start">
+                <div>
+                    <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Entreprises</p>
+                    <h3 class="text-3xl font-bold text-slate-800 mt-2">{{ stats.followed_companies }}</h3>
+                </div>
+                <div class="p-3 bg-purple-50 rounded-xl text-purple-600">
+                    <i class="fas fa-building text-xl"></i>
+                </div>
+            </div>
+            <p class="text-xs text-slate-400 mt-4 font-medium">Partenaires</p>
+        </div>
+
+        <div class="bg-slate-800 rounded-2xl p-6 shadow-lg text-white hover:shadow-xl transition">
+            <div class="flex justify-between items-start">
+                <div>
+                    <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Entretiens</p>
+                    <h3 class="text-3xl font-bold mt-2">{{ stats.interviews_scheduled }}</h3>
+                </div>
+                <div class="p-3 bg-slate-700 rounded-xl text-slate-300">
+                    <i class="fas fa-calendar-check text-xl"></i>
+                </div>
+            </div>
+            <p class="text-xs text-slate-400 mt-4 font-medium">Planifiés</p>
+        </div>
+    </div>
+
+    <!-- Main Content Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- Annonces Section -->
+        <div id="offres" class="lg:col-span-2">
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                <div class="px-6 py-5 border-b border-slate-100 bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
+                    <h3 class="font-bold text-lg flex items-center">
+                        <i class="fas fa-list mr-3"></i>
+                        Annonces disponibles
+                    </h3>
+                </div>
+
+                <div class="p-6">
+                    {% if annonces|length > 0 %}
+                        <div class="space-y-4">
+                            {% for annonce in annonces %}
+                                {% set hasApplied = false %}
+                                {% for app in my_applications %}
+                                    {% if app.annonce_id == annonce.id %}
+                                        {% set hasApplied = true %}
+                                    {% endif %}
+                                {% endfor %}
+                                
+                                <div class="border border-slate-200 rounded-xl hover:border-blue-500 hover:shadow-md transition p-5 bg-slate-50">
+                                    <div class="flex justify-between items-start mb-3">
+                                        <div class="flex-1">
+                                            <h4 class="text-lg font-bold text-slate-800">{{ annonce.titre }}</h4>
+                                            <p class="text-slate-600 text-sm flex items-center mt-1">
+                                                <i class="fas fa-building mr-2 text-blue-600"></i>
+                                                {{ annonce.entreprise_nom }}
+                                            </p>
+                                        </div>
+                                        {% if hasApplied %}
+                                            <span class="px-3 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded-full whitespace-nowrap ml-2">
+                                                <i class="fas fa-check mr-1"></i>Postulé
+                                            </span>
+                                        {% else %}
+                                            <span class="px-3 py-1 bg-blue-100 text-blue-700 text-xs font-semibold rounded-full whitespace-nowrap ml-2">
+                                                <i class="fas fa-star mr-1"></i>Nouveau
+                                            </span>
+                                        {% endif %}
+                                    </div>
+
+                                    <p class="text-slate-700 text-sm mb-4 line-clamp-2">{{ annonce.description|slice(0, 150) }}...</p>
+
+                                    <div class="flex flex-wrap gap-2 mb-4">
+                                        {% if annonce.type_contrat %}
+                                            <span class="px-2 py-1 bg-slate-200 text-slate-700 text-xs rounded-full font-medium">
+                                                {{ annonce.type_contrat }}
+                                            </span>
+                                        {% endif %}
+                                        {% if annonce.competences %}
+                                            {% set skills = annonce.competences|split(',') %}
+                                            {% for skill in skills|slice(0, 2) %}
+                                                <span class="px-2 py-1 bg-indigo-100 text-indigo-700 text-xs rounded-full font-medium">
+                                                    {{ skill|trim }}
+                                                </span>
+                                            {% endfor %}
+                                            {% if skills|length > 2 %}
+                                                <span class="px-2 py-1 bg-slate-200 text-slate-700 text-xs rounded-full font-medium">
+                                                    +{{ skills|length - 2 }}
+                                                </span>
+                                            {% endif %}
+                                        {% endif %}
+                                    </div>
+
+                                    <div class="flex justify-between items-center">
+                                        <p class="text-slate-500 text-xs">
+                                            <i class="fas fa-calendar mr-1"></i>
+                                            {{ annonce.date_creation|date('d/m/Y') }}
+                                        </p>
+                                        {% if accepted_application %}
+                                            <button disabled class="px-4 py-2 bg-slate-300 text-slate-700 rounded-lg text-sm font-medium cursor-not-allowed" title="Vous avez déjà accepté une offre">
+                                                <i class="fas fa-lock mr-1"></i>Bloqué
+                                            </button>
+                                        {% elseif hasApplied %}
+                                            <button disabled class="px-4 py-2 bg-slate-300 text-slate-700 rounded-lg text-sm font-medium cursor-not-allowed">
+                                                <i class="fas fa-check mr-1"></i>Postulé
+                                            </button>
+                                        {% else %}
+                                            <button 
+                                                type="button" 
+                                                onclick="openCandidatureModal('{{ annonce.id }}', '{{ annonce.titre|escape('js') }}')"
+                                                class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition duration-300 hover:shadow-md">
+                                                <i class="fas fa-send mr-1"></i>Postuler
+                                            </button>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center py-12">
+                            <i class="fas fa-inbox text-5xl text-slate-300 mb-4"></i>
+                            <p class="text-slate-600 font-medium">Aucune annonce disponible</p>
+                            <p class="text-slate-500 text-sm">Revenez plus tard pour découvrir de nouvelles opportunités</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="space-y-6">
             
-            card.addEventListener('mouseleave', function() {
-                this.style.transform = 'translateY(0)';
-            });
-        });
-    </script>
-</body>
-</html>
+            <!-- Mes Candidatures -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                <div class="px-6 py-5 border-b border-slate-100 bg-gradient-to-r from-green-600 to-emerald-600 text-white">
+                    <h3 class="font-bold text-lg flex items-center">
+                        <i class="fas fa-paper-plane mr-3"></i>
+                        Mes candidatures
+                    </h3>
+                </div>
+
+                <div class="p-6">
+                    {% if my_applications|length > 0 %}
+                        <div class="space-y-3">
+                            {% for app in my_applications %}
+                                <div class="border border-green-200 rounded-lg p-4 hover:bg-green-50 transition">
+                                    <div class="flex items-start justify-between">
+                                        <div>
+                                            <p class="font-semibold text-slate-800">{{ app.annonce_titre }}</p>
+                                            <p class="text-slate-600 text-sm">{{ app.entreprise_nom }}</p>
+                                            <p class="text-xs text-slate-500 mt-1">{{ app.date_candidature|date('d/m/Y H:i') }}</p>
+                                        </div>
+                                        <span class="px-2 py-1 text-xs font-semibold rounded-full whitespace-nowrap ml-2
+                                            {% if app.statut == 'validee' %}
+                                                bg-green-100 text-green-700
+                                            {% elseif app.statut == 'refusee' %}
+                                                bg-red-100 text-red-700
+                                            {% else %}
+                                                bg-yellow-100 text-yellow-700
+                                            {% endif %}">
+                                            {{ app.statut|capitalize }}
+                                        </span>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center py-8">
+                            <i class="fas fa-inbox text-4xl text-slate-300 mb-3"></i>
+                            <p class="text-slate-600 font-medium">Aucune candidature</p>
+                            <p class="text-slate-500 text-xs mt-1">Commencez à postuler aux offres</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Mon Profil -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                <div class="px-6 py-5 border-b border-slate-100 bg-gradient-to-r from-purple-600 to-indigo-600 text-white">
+                    <h3 class="font-bold text-lg flex items-center">
+                        <i class="fas fa-user mr-3"></i>
+                        Mon profil
+                    </h3>
+                </div>
+
+                <div class="p-6">
+                    <div class="text-center mb-4">
+                        <div class="inline-block w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mb-3">
+                            <i class="fas fa-user-graduate text-2xl text-white"></i>
+                        </div>
+                        <h4 class="font-bold text-slate-800">{{ user.name }}</h4>
+                        <p class="text-slate-600 text-sm">Apprenant YouCode</p>
+                    </div>
+
+                    <div class="space-y-3 border-t border-slate-200 pt-4">
+                        <div class="flex items-center">
+                            <i class="fas fa-envelope text-slate-400 mr-3"></i>
+                            <span class="text-slate-700 text-sm break-all">{{ user.email }}</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-badge-check text-blue-500 mr-3"></i>
+                            <span class="text-slate-700 text-sm font-medium">Apprenant</span>
+                        </div>
+                    </div>
+
+                    <button class="w-full mt-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:opacity-90 text-white rounded-lg text-sm font-medium transition duration-300">
+                        <i class="fas fa-edit mr-2"></i>Modifier le profil
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Include Modal -->
+    {% include "front/dashboard/modal-candidature.twig" %}
+
 {% endblock %}

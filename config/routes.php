@@ -4,9 +4,33 @@
 
 use App\controllers\back\DashboardController;
 use App\controllers\back\AnnoncesController;
+use App\controllers\back\StudentController;
+use App\controllers\back\CandidatureController;
+
+use App\controllers\back\CompanyController;
+
+// 1. لائحة الشركات
+$router->get('/admin/companies', [CompanyController::class, 'index']);
+
+// 2. إضافة شركة جديدة
+$router->get('/admin/companies/create', [CompanyController::class, 'create']);
+$router->post('/admin/companies/save', [CompanyController::class, 'save']);
+
+// 3. تعديل شركة
+$router->get('/admin/companies/edit/{id}', [CompanyController::class, 'edit']);
+$router->post('/admin/companies/update/{id}', [CompanyController::class, 'update']);
+
+// 4. حذف شركة
+$router->get('/admin/companies/delete/{id}', [CompanyController::class, 'delete']);
+
+// ... الروابط القديمة ...
+
+// ✅ هذا هو الجديد: رابط لتحديث حالة الترشيح (POST حيت كنبدلو الداتا)
+$router->post('/admin/candidatures/update/{id}', [CandidatureController::class, 'updateStatus']);
+
 
 // الطريقة 1: باستعمال ::class (هي اللي كننصحك بيها، بروفيسيونيل)
-$router->get('admin/dashboard', [DashboardController::class, 'index']);
+$router->get('/admin/dashboard', [DashboardController::class, 'index']);
 
 // أو الطريقة 2: بالكتابة المباشرة (إلا ما بغيتيش دير use الفوق)
 // $router->get('admin/dashboard', ['App\controllers\back\DashboardController', 'index']);
@@ -42,3 +66,11 @@ $router->get('/admin/annonces/edit/{id}', [AnnoncesController::class, 'edit']);
 
 // تسجيل التعديلات (Update Action)
 $router->post('/admin/annonces/update/{id}', [AnnoncesController::class, 'update']);
+// 1. Import Class
+
+// 2. Add Route
+$router->get('/admin/students', [StudentController::class, 'index']);
+
+
+// ...
+$router->get('/admin/candidatures', [CandidatureController::class, 'index']);

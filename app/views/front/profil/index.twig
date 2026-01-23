@@ -1,0 +1,179 @@
+{% extends "front/layout.twig" %}
+
+{% block title %}Mon Profil - JobDating{% endblock %}
+
+{% block content %}
+
+    <!-- Header -->
+    <div class="relative w-full bg-gradient-to-r from-purple-600 to-indigo-600 rounded-3xl p-8 mb-10 text-white shadow-xl overflow-hidden">
+        <div class="relative z-10">
+            <h2 class="text-3xl font-bold mb-2">Mon Profil 👤</h2>
+            <p class="text-purple-100">Gérez vos informations personnelles</p>
+        </div>
+        <div class="absolute top-0 right-0 -mt-4 -mr-4 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
+        <div class="absolute bottom-0 right-20 -mb-4 w-24 h-24 bg-white/10 rounded-full blur-xl"></div>
+    </div>
+
+    <!-- Messages Flash -->
+    {% if flash_success %}
+        <div class="bg-green-50 border-l-4 border-green-600 p-4 rounded-lg mb-6 shadow-sm">
+            <div class="flex items-center">
+                <i class="fas fa-check-circle text-green-600 mr-3"></i>
+                <p class="text-green-700">{{ flash_success }}</p>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if flash_errors %}
+        {% for field, errors in flash_errors %}
+            {% for error in errors %}
+                <div class="bg-red-50 border-l-4 border-red-600 p-4 rounded-lg mb-6 shadow-sm">
+                    <div class="flex items-center">
+                        <i class="fas fa-exclamation-circle text-red-600 mr-3"></i>
+                        <p class="text-red-700">{{ error }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endfor %}
+    {% endif %}
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <!-- Profil Card -->
+        <div class="lg:col-span-1">
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden sticky top-8">
+                <div class="h-32 bg-gradient-to-r from-purple-600 to-indigo-600"></div>
+                
+                <div class="px-6 pb-6">
+                    <div class="flex justify-center -mt-16 mb-4">
+                        <div class="w-32 h-32 rounded-full border-4 border-white bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center shadow-lg">
+                            <i class="fas fa-user-graduate text-4xl text-white"></i>
+                        </div>
+                    </div>
+
+                    <h3 class="text-2xl font-bold text-center text-slate-800 mb-1">{{ user.name }}</h3>
+                    <p class="text-center text-slate-600 mb-6">Apprenant YouCode</p>
+
+                    <div class="space-y-4">
+                        <div class="p-4 bg-blue-50 rounded-lg border border-blue-100">
+                            <p class="text-xs font-semibold text-blue-600 uppercase mb-1">Email</p>
+                            <p class="text-slate-800 break-all">{{ user.email }}</p>
+                        </div>
+
+                        <div class="p-4 bg-green-50 rounded-lg border border-green-100">
+                            <p class="text-xs font-semibold text-green-600 uppercase mb-1">Rôle</p>
+                            <p class="text-slate-800 font-medium">Apprenant</p>
+                        </div>
+
+                        {% if student and student.promotion %}
+                        <div class="p-4 bg-purple-50 rounded-lg border border-purple-100">
+                            <p class="text-xs font-semibold text-purple-600 uppercase mb-1">Promotion</p>
+                            <p class="text-slate-800">{{ student.promotion }}</p>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <button class="w-full mt-6 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:opacity-90 text-white rounded-lg font-medium transition">
+                        <i class="fas fa-camera mr-2"></i>Changer photo
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Formulaire d'édition -->
+        <div class="lg:col-span-2">
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                <div class="px-6 py-5 border-b border-slate-100 bg-gradient-to-r from-purple-600 to-indigo-600 text-white">
+                    <h3 class="font-bold text-lg flex items-center">
+                        <i class="fas fa-edit mr-3"></i>
+                        Modifier mes informations
+                    </h3>
+                </div>
+
+                <form action="/profil/update" method="POST" class="p-6 space-y-6">
+                    
+                    <!-- Token CSRF -->
+                    <input type="hidden" name="_token" value="{{ csrf_token }}">
+                    
+                    <!-- Nom et Prénom -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-2">
+                                <i class="fas fa-user mr-2 text-blue-600"></i>Prénom
+                            </label>
+                            <input 
+                                type="text" 
+                                name="prenom"
+                                value="{% if student %}{{ student.prenom }}{% endif %}"
+                                class="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" 
+                                placeholder="Votre prénom"
+                                required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-2">
+                                <i class="fas fa-user mr-2 text-blue-600"></i>Nom
+                            </label>
+                            <input 
+                                type="text" 
+                                name="nom"
+                                value="{% if student %}{{ student.nom }}{% endif %}"
+                                class="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" 
+                                placeholder="Votre nom"
+                                required>
+                        </div>
+                    </div>
+
+                    <!-- Email (lecture seule) -->
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-2">
+                            <i class="fas fa-envelope mr-2 text-blue-600"></i>Email
+                        </label>
+                        <input 
+                            type="email" 
+                            value="{{ user.email }}" 
+                            class="w-full px-4 py-2 border border-slate-200 rounded-lg bg-slate-100 focus:outline-none" 
+                            placeholder="votre@email.com"
+                            disabled>
+                    </div>
+
+                    <!-- Promotion et Spécialisation -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-2">
+                                <i class="fas fa-graduation-cap mr-2 text-blue-600"></i>Promotion
+                            </label>
+                            <input 
+                                type="text" 
+                                name="promotion"
+                                value="{% if student %}{{ student.promotion }}{% endif %}"
+                                class="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" 
+                                placeholder="Ex: 2024">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-2">
+                                <i class="fas fa-briefcase mr-2 text-blue-600"></i>Spécialisation
+                            </label>
+                            <input 
+                                type="text" 
+                                name="specialisation"
+                                value="{% if student %}{{ student.specialisation }}{% endif %}"
+                                class="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" 
+                                placeholder="Ex: Développement Web">
+                        </div>
+                    </div>
+
+                    <!-- Boutons d'action -->
+                    <div class="flex gap-4 pt-4">
+                        <button type="submit" class="flex-1 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 hover:opacity-90 text-white rounded-lg font-semibold transition">
+                            <i class="fas fa-save mr-2"></i>Enregistrer les modifications
+                        </button>
+                        <button type="reset" class="flex-1 py-3 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-lg font-semibold transition">
+                            <i class="fas fa-undo mr-2"></i>Annuler
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

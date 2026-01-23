@@ -1,0 +1,342 @@
+{% extends "back/layout.twig" %}
+
+{% block title %}Gestion des Candidatures{% endblock %}
+
+{% block content %}
+
+<!-- Header -->
+<div class="mb-8">
+    <h1 class="text-3xl font-bold text-slate-800 mb-2">
+        <i class="fas fa-file-contract mr-2 text-blue-600"></i>
+        Gestion des Candidatures
+    </h1>
+    <p class="text-slate-600">Consultez et gérez toutes les candidatures des apprenants</p>
+</div>
+
+<!-- Stats Cards -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+    <div class="bg-white rounded-lg p-4 border border-slate-200 shadow-sm">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-xs font-semibold text-slate-500 uppercase">Total Candidatures</p>
+                <p class="text-2xl font-bold text-slate-800 mt-1">{{ stats.total }}</p>
+            </div>
+            <i class="fas fa-file-contract text-3xl text-blue-500 opacity-20"></i>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-lg p-4 border border-slate-200 shadow-sm">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-xs font-semibold text-slate-500 uppercase">En Attente</p>
+                <p class="text-2xl font-bold text-yellow-600 mt-1">{{ stats.en_attente }}</p>
+            </div>
+            <i class="fas fa-hourglass-half text-3xl text-yellow-500 opacity-20"></i>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-lg p-4 border border-slate-200 shadow-sm">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-xs font-semibold text-slate-500 uppercase">Validées</p>
+                <p class="text-2xl font-bold text-green-600 mt-1">{{ stats.validee }}</p>
+            </div>
+            <i class="fas fa-check-circle text-3xl text-green-500 opacity-20"></i>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-lg p-4 border border-slate-200 shadow-sm">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-xs font-semibold text-slate-500 uppercase">Refusées</p>
+                <p class="text-2xl font-bold text-red-600 mt-1">{{ stats.refusee }}</p>
+            </div>
+            <i class="fas fa-times-circle text-3xl text-red-500 opacity-20"></i>
+        </div>
+    </div>
+</div>
+
+<!-- Table des Candidatures -->
+<div class="bg-white rounded-lg border border-slate-200 shadow-sm">
+    {% if candidatures %}
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead>
+                    <tr class="border-b border-slate-200 bg-slate-50">
+                        <th class="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase">Apprenant</th>
+                        <th class="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase">Offre</th>
+                        <th class="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase">Entreprise</th>
+                        <th class="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase">Date</th>
+                        <th class="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase">Statut</th>
+                        <th class="px-6 py-3 text-center text-xs font-semibold text-slate-600 uppercase">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for candidature in candidatures %}
+                        <tr class="border-b border-slate-200 hover:bg-slate-50 transition">
+                            <td class="px-6 py-4">
+                                <div class="font-semibold text-slate-800">
+                                    {{ candidature.apprenant_prenom }} {{ candidature.apprenant_nom }}
+                                </div>
+                                <div class="text-xs text-slate-500">
+                                    ID: {{ candidature.apprenant_id }}
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="font-medium text-slate-800">{{ candidature.annonce_titre }}</div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="text-slate-700">{{ candidature.entreprise_nom }}</div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="text-slate-600">
+                                    {{ candidature.date_candidature|date('d/m/Y H:i') }}
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <span class="px-3 py-1 rounded-full text-xs font-semibold inline-block
+                                    {% if candidature.statut == 'validee' %}
+                                        bg-green-100 text-green-700
+                                    {% elseif candidature.statut == 'refusee' %}
+                                        bg-red-100 text-red-700
+                                    {% else %}
+                                        bg-yellow-100 text-yellow-700
+                                    {% endif %}">
+                                    {{ candidature.statut|capitalize }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 text-center">
+                                <button onclick="viewCandidature({{ candidature.id }})" 
+                                    class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded text-xs font-medium transition">
+                                    <i class="fas fa-eye mr-1"></i>Voir
+                                </button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="px-6 py-12 text-center">
+            <i class="fas fa-inbox text-5xl text-slate-300 mb-4 block"></i>
+            <p class="text-slate-600 font-medium">Aucune candidature</p>
+            <p class="text-slate-500 text-sm">Les candidatures apparaîtront ici</p>
+        </div>
+    {% endif %}
+</div>
+
+<!-- Modal de Détail Candidature -->
+<div id="modalCandidatureDetail" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-4xl w-full mx-4 max-h-screen overflow-y-auto">
+        <!-- Header -->
+        <div class="sticky top-0 bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-6 border-b border-slate-200">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h2 class="text-2xl font-bold">Détail Candidature</h2>
+                    <p class="text-blue-100 text-sm mt-1" id="detailTitle"></p>
+                </div>
+                <button onclick="closeDetail()" class="p-2 hover:bg-white/20 rounded-lg transition">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Body -->
+        <div class="p-6 space-y-6">
+            <!-- Infos Apprenant -->
+            <div class="bg-slate-50 rounded-lg p-6 border border-slate-200">
+                <h3 class="font-bold text-slate-800 mb-4 flex items-center">
+                    <i class="fas fa-user mr-2 text-indigo-600"></i>
+                    Informations Apprenant
+                </h3>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-xs text-slate-500 font-semibold uppercase">Nom Complet</p>
+                        <p class="text-slate-800 font-medium" id="detailNom"></p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-slate-500 font-semibold uppercase">Promotion</p>
+                        <p class="text-slate-800 font-medium" id="detailPromotion"></p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-slate-500 font-semibold uppercase">Email</p>
+                        <p class="text-slate-800 font-medium" id="detailEmail"></p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-slate-500 font-semibold uppercase">Téléphone</p>
+                        <p class="text-slate-800 font-medium" id="detailTelephone"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Infos Offre -->
+            <div class="bg-slate-50 rounded-lg p-6 border border-slate-200">
+                <h3 class="font-bold text-slate-800 mb-4 flex items-center">
+                    <i class="fas fa-briefcase mr-2 text-emerald-600"></i>
+                    Informations Offre
+                </h3>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-xs text-slate-500 font-semibold uppercase">Titre du Poste</p>
+                        <p class="text-slate-800 font-medium" id="detailTitreOffre"></p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-slate-500 font-semibold uppercase">Entreprise</p>
+                        <p class="text-slate-800 font-medium" id="detailEntreprise"></p>
+                    </div>
+                    <div class="col-span-2">
+                        <p class="text-xs text-slate-500 font-semibold uppercase">Type de Contrat</p>
+                        <p class="text-slate-800 font-medium" id="detailContrat"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Message de Motivation -->
+            <div class="bg-slate-50 rounded-lg p-6 border border-slate-200">
+                <h3 class="font-bold text-slate-800 mb-4 flex items-center">
+                    <i class="fas fa-pen-fancy mr-2 text-purple-600"></i>
+                    Lettre de Motivation
+                </h3>
+                <div class="bg-white rounded p-4 border border-slate-200 max-h-40 overflow-y-auto">
+                    <p class="text-slate-700 whitespace-pre-wrap text-sm" id="detailMessage"></p>
+                </div>
+            </div>
+
+            <!-- Statut et Actions -->
+            <div class="bg-blue-50 rounded-lg p-6 border border-blue-200">
+                <h3 class="font-bold text-slate-800 mb-4 flex items-center">
+                    <i class="fas fa-tasks mr-2 text-blue-600"></i>
+                    Gérer Candidature
+                </h3>
+                <div class="flex gap-3">
+                    <button onclick="updateStatus('validee')" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded font-medium transition">
+                        <i class="fas fa-check mr-2"></i>Valider
+                    </button>
+                    <button onclick="updateStatus('refusee')" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded font-medium transition">
+                        <i class="fas fa-times mr-2"></i>Refuser
+                    </button>
+                    <button onclick="updateStatus('en_attente')" class="px-4 py-2 bg-yellow-600 hover:bg-yellow-700 text-white rounded font-medium transition">
+                        <i class="fas fa-clock mr-2"></i>En Attente
+                    </button>
+                </div>
+            </div>
+
+            <!-- Date -->
+            <div class="text-center text-slate-600 text-sm border-t border-slate-200 pt-4">
+                Candidature soumise le <span id="detailDate" class="font-medium"></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let currentCandidatureId = null;
+let candidaturesData = {
+    {% for candidature in candidatures %}
+        {{ candidature.id }}: {
+            id: {{ candidature.id }},
+            apprenant_nom: "{{ candidature.apprenant_nom }}",
+            apprenant_prenom: "{{ candidature.apprenant_prenom }}",
+            apprenant_email: "{{ candidature.apprenant_email }}",
+            apprenant_telephone: "{{ candidature.apprenant_telephone }}",
+            promotion: "{{ candidature.promotion }}",
+            annonce_titre: "{{ candidature.annonce_titre }}",
+            entreprise_nom: "{{ candidature.entreprise_nom }}",
+            type_contrat: "{{ candidature.type_contrat }}",
+            message: "{{ candidature.message|escape('js') }}",
+            statut: "{{ candidature.statut }}",
+            date_candidature: "{{ candidature.date_candidature|date('d/m/Y H:i') }}"
+        },
+    {% endfor %}
+};
+
+function viewCandidature(id) {
+    const data = candidaturesData[id];
+    if (!data) return;
+
+    currentCandidatureId = id;
+
+    // Remplir les infos
+    document.getElementById('detailTitle').textContent = data.annonce_titre + ' - ' + data.apprenant_prenom + ' ' + data.apprenant_nom;
+    document.getElementById('detailNom').textContent = data.apprenant_prenom + ' ' + data.apprenant_nom;
+    document.getElementById('detailEmail').textContent = data.apprenant_email;
+    document.getElementById('detailTelephone').textContent = data.apprenant_telephone || 'Non fourni';
+    document.getElementById('detailPromotion').textContent = data.promotion;
+    document.getElementById('detailTitreOffre').textContent = data.annonce_titre;
+    document.getElementById('detailEntreprise').textContent = data.entreprise_nom;
+    document.getElementById('detailContrat').textContent = data.type_contrat;
+    document.getElementById('detailMessage').textContent = data.message;
+    document.getElementById('detailDate').textContent = data.date_candidature;
+
+    document.getElementById('modalCandidatureDetail').classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeDetail() {
+    document.getElementById('modalCandidatureDetail').classList.add('hidden');
+    document.body.style.overflow = 'auto';
+}
+
+function updateStatus(status) {
+    if (!currentCandidatureId) {
+        console.error('Pas de candidature sélectionnée');
+        return;
+    }
+    
+    const url = `/admin/candidatures/${currentCandidatureId}/status`;
+    const payload = { statut: status };
+    
+    console.log('Envoi requête:', { url, payload });
+    
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: JSON.stringify(payload)
+    })
+    .then(response => {
+        console.log('Réponse reçue, status:', response.status);
+        if (!response.ok && response.status !== 200) {
+            const msg = `Erreur HTTP ${response.status}`;
+            console.error(msg);
+            return response.text().then(text => {
+                throw new Error(msg + ': ' + text);
+            });
+        }
+        return response.text();
+    })
+    .then(text => {
+        console.log('Texte reçu:', text);
+        try {
+            const data = JSON.parse(text);
+            console.log('JSON parsé:', data);
+            if (data.success) {
+                showAlert('Statut mis à jour avec succès', 'success');
+                setTimeout(() => location.reload(), 1500);
+            } else {
+                showAlert('Erreur: ' + (data.message || 'Impossible de mettre à jour'), 'error');
+            }
+        } catch (e) {
+            throw new Error('JSON invalide: ' + text);
+        }
+    })
+    .catch(err => {
+        console.error('Erreur fetch:', err);
+        showAlert('Erreur: ' + err.message, 'error');
+    });
+}
+
+// Fermer le modal en cliquant dehors
+document.getElementById('modalCandidatureDetail').addEventListener('click', function(e) {
+    if (e.target === this) closeDetail();
+});
+
+// Fermer avec Échap
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeDetail();
+});
+</script>
+
+{% endblock %}
