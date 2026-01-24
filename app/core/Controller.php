@@ -16,7 +16,6 @@ class Controller
 
     public function __construct()
     {
-        // هنا قمنا بإنشاء Instance من View
         $this->view = new View(); 
         $this->security = new Security();
         $this->session = Session::getInstance();
@@ -24,16 +23,13 @@ class Controller
     }
 
     /**
-     * دالة لعرض صفحات Twig
      */
     protected function render(string $view, array $data = []): void
     {
-        // ✅ التصحيح: نستعمل $this->view لأنها ليست Static
         $this->view->render($view, $data); 
     }
 
     /**
-     * دالة لعرض صفحات PHP العادية (Legacy)
      */
     protected function view(string $view, array $data = [])
     {

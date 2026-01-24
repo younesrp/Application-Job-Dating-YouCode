@@ -30,14 +30,11 @@ class DashboardController extends Controller {
         ]);
     }
 
-    /**
-     * Affiche toutes les candidatures
-     */
+    
     public function candidatures()
     {
         $candidatureModel = new Candidature();
         
-        // Récupérer toutes les candidatures avec infos complètes
         $candidatures = $candidatureModel->getAllCandidaturesDetailed();
         
         // Calculer les stats
