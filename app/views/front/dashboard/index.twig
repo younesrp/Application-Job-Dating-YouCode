@@ -1,0 +1,280 @@
+{% extends "front/layout.twig" %}
+
+{% block title %}Dashboard Apprenant - JobDating{% endblock %}
+
+{% block content %}
+
+    <!-- Header Welcome -->
+    <div class="relative w-full bg-gradient-to-r from-blue-600 to-indigo-600 rounded-3xl p-8 mb-10 text-white shadow-xl overflow-hidden">
+        <div class="relative z-10">
+            <h2 class="text-3xl font-bold mb-2">Bienvenue, {{ user.name }}! 👋</h2>
+            <p class="text-blue-100">Découvrez les meilleures opportunités professionnelles pour votre carrière</p>
+        </div>
+        <div class="absolute top-0 right-0 -mt-4 -mr-4 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
+        <div class="absolute bottom-0 right-20 -mb-4 w-24 h-24 bg-white/10 rounded-full blur-xl"></div>
+    </div>
+
+    {% if accepted_application %}
+    <!-- Alert Message -->
+    <div class="bg-green-50 border-l-4 border-green-600 p-6 rounded-lg mb-8 shadow-sm">
+        <div class="flex items-start">
+            <i class="fas fa-check-circle text-green-600 text-2xl mr-4 mt-1"></i>
+            <div>
+                <h3 class="text-green-800 font-bold text-lg mb-1">Félicitations! 🎉</h3>
+                <p class="text-green-700 mb-2">Vous avez accepté l'offre: <strong>{{ accepted_application.titre }}</strong></p>
+                <p class="text-green-600 text-sm">Vous ne pouvez plus postuler à d'autres offres. Concentrez-vous sur cette nouvelle opportunité!</p>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+        
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 hover:shadow-md transition">
+            <div class="flex justify-between items-start">
+                <div>
+                    <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Offres Disponibles</p>
+                    <h3 class="text-3xl font-bold text-slate-800 mt-2">{{ stats.recommended_jobs }}</h3>
+                </div>
+                <div class="p-3 bg-blue-50 rounded-xl text-blue-600">
+                    <i class="fas fa-briefcase text-xl"></i>
+                </div>
+            </div>
+            <p class="text-xs text-blue-500 mt-4 font-medium flex items-center">
+                <i class="fas fa-arrow-up mr-1"></i> À explorer
+            </p>
+        </div>
+
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 hover:shadow-md transition">
+            <div class="flex justify-between items-start">
+                <div>
+                    <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Candidatures</p>
+                    <h3 class="text-3xl font-bold text-slate-800 mt-2">{{ stats.applications_sent }}</h3>
+                </div>
+                <div class="p-3 bg-green-50 rounded-xl text-green-600">
+                    <i class="fas fa-paper-plane text-xl"></i>
+                </div>
+            </div>
+            <p class="text-xs text-green-500 mt-4 font-medium">Envoyées</p>
+        </div>
+
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 hover:shadow-md transition">
+            <div class="flex justify-between items-start">
+                <div>
+                    <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Entreprises</p>
+                    <h3 class="text-3xl font-bold text-slate-800 mt-2">{{ stats.followed_companies }}</h3>
+                </div>
+                <div class="p-3 bg-purple-50 rounded-xl text-purple-600">
+                    <i class="fas fa-building text-xl"></i>
+                </div>
+            </div>
+            <p class="text-xs text-slate-400 mt-4 font-medium">Partenaires</p>
+        </div>
+
+        <div class="bg-slate-800 rounded-2xl p-6 shadow-lg text-white hover:shadow-xl transition">
+            <div class="flex justify-between items-start">
+                <div>
+                    <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Entretiens</p>
+                    <h3 class="text-3xl font-bold mt-2">{{ stats.interviews_scheduled }}</h3>
+                </div>
+                <div class="p-3 bg-slate-700 rounded-xl text-slate-300">
+                    <i class="fas fa-calendar-check text-xl"></i>
+                </div>
+            </div>
+            <p class="text-xs text-slate-400 mt-4 font-medium">Planifiés</p>
+        </div>
+    </div>
+
+    <!-- Main Content Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- Annonces Section -->
+
+        
+        <div id="offres" class="lg:col-span-2">
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                <div class="px-6 py-5 border-b border-slate-100 bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
+                    <h3 class="font-bold text-lg flex items-center">
+                        <i class="fas fa-list mr-3"></i>
+                        Annonces disponibles
+                    </h3>
+                </div>
+                <div class="p-6">
+                    {% if annonces|length > 0 %}
+                        <div class="space-y-4">
+                            {% for annonce in annonces %}
+                                {% set hasApplied = false %}
+                                {% for app in my_applications %}
+                                    {% if app.annonce_id == annonce.id %}
+                                        {% set hasApplied = true %}
+                                    {% endif %}
+                                {% endfor %}
+                                
+                                <div class="border border-slate-200 rounded-xl hover:border-blue-500 hover:shadow-md transition p-5 bg-slate-50">
+                                    <div class="flex justify-between items-start mb-3">
+                                        <div class="flex-1">
+                                            <h4 class="text-lg font-bold text-slate-800">{{ annonce.titre }}</h4>
+                                            <p class="text-slate-600 text-sm flex items-center mt-1">
+                                                <i class="fas fa-building mr-2 text-blue-600"></i>
+                                                {{ annonce.entreprise_nom }}
+                                            </p>
+                                        </div>
+                                        {% if hasApplied %}
+                                            <span class="px-3 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded-full whitespace-nowrap ml-2">
+                                                <i class="fas fa-check mr-1"></i>Postulé
+                                            </span>
+                                        {% else %}
+                                            <span class="px-3 py-1 bg-blue-100 text-blue-700 text-xs font-semibold rounded-full whitespace-nowrap ml-2">
+                                                <i class="fas fa-star mr-1"></i>Nouveau
+                                            </span>
+                                        {% endif %}
+                                    </div>
+
+                                    <p class="text-slate-700 text-sm mb-4 line-clamp-2">{{ annonce.description|slice(0, 150) }}...</p>
+
+                                    <div class="flex flex-wrap gap-2 mb-4">
+                                        {% if annonce.type_contrat %}
+                                            <span class="px-2 py-1 bg-slate-200 text-slate-700 text-xs rounded-full font-medium">
+                                                {{ annonce.type_contrat }}
+                                            </span>
+                                        {% endif %}
+                                        {% if annonce.competences %}
+                                            {% set skills = annonce.competences|split(',') %}
+                                            {% for skill in skills|slice(0, 2) %}
+                                                <span class="px-2 py-1 bg-indigo-100 text-indigo-700 text-xs rounded-full font-medium">
+                                                    {{ skill|trim }}
+                                                </span>
+                                            {% endfor %}
+                                            {% if skills|length > 2 %}
+                                                <span class="px-2 py-1 bg-slate-200 text-slate-700 text-xs rounded-full font-medium">
+                                                    +{{ skills|length - 2 }}
+                                                </span>
+                                            {% endif %}
+                                        {% endif %}
+                                    </div>
+
+                                    <div class="flex justify-between items-center">
+                                        <p class="text-slate-500 text-xs">
+                                            <i class="fas fa-calendar mr-1"></i>
+                                            {{ annonce.date_creation|date('d/m/Y') }}
+                                        </p>
+                                        {% if accepted_application %}
+                                            <button disabled class="px-4 py-2 bg-slate-300 text-slate-700 rounded-lg text-sm font-medium cursor-not-allowed" title="Vous avez déjà accepté une offre">
+                                                <i class="fas fa-lock mr-1"></i>Bloqué
+                                            </button>
+                                        {% elseif hasApplied %}
+                                            <button disabled class="px-4 py-2 bg-slate-300 text-slate-700 rounded-lg text-sm font-medium cursor-not-allowed">
+                                                <i class="fas fa-check mr-1"></i>Postulé
+                                            </button>
+                                        {% else %}
+                                            <button 
+                                                type="button" 
+                                                onclick="openCandidatureModal('{{ annonce.id }}', '{{ annonce.titre|escape('js') }}')"
+                                                class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition duration-300 hover:shadow-md">
+                                                <i class="fas fa-send mr-1"></i>Postuler
+                                            </button>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center py-12">
+                            <i class="fas fa-inbox text-5xl text-slate-300 mb-4"></i>
+                            <p class="text-slate-600 font-medium">Aucune annonce disponible</p>
+                            <p class="text-slate-500 text-sm">Revenez plus tard pour découvrir de nouvelles opportunités</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="space-y-6">
+            <!-- Mes Candidatures -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                <div class="px-6 py-5 border-b border-slate-100 bg-gradient-to-r from-green-600 to-emerald-600 text-white">
+                    <h3 class="font-bold text-lg flex items-center">
+                        <i class="fas fa-paper-plane mr-3"></i>
+                        Mes candidatures
+                    </h3>
+                </div>
+
+                <div class="p-6">
+                    {% if my_applications|length > 0 %}
+                        <div class="space-y-3">
+                            {% for app in my_applications %}
+                                <div class="border border-green-200 rounded-lg p-4 hover:bg-green-50 transition">
+                                    <div class="flex items-start justify-between">
+                                        <div>
+                                            <p class="font-semibold text-slate-800">{{ app.annonce_titre }}</p>
+                                            <p class="text-slate-600 text-sm">{{ app.entreprise_nom }}</p>
+                                            <p class="text-xs text-slate-500 mt-1">{{ app.date_candidature|date('d/m/Y H:i') }}</p>
+                                        </div>
+                                        <span class="px-2 py-1 text-xs font-semibold rounded-full whitespace-nowrap ml-2
+                                            {% if app.statut == 'validee' %}
+                                                bg-green-100 text-green-700
+                                            {% elseif app.statut == 'refusee' %}
+                                                bg-red-100 text-red-700
+                                            {% else %}
+                                                bg-yellow-100 text-yellow-700
+                                            {% endif %}">
+                                            {{ app.statut|capitalize }}
+                                        </span>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center py-8">
+                            <i class="fas fa-inbox text-4xl text-slate-300 mb-3"></i>
+                            <p class="text-slate-600 font-medium">Aucune candidature</p>
+                            <p class="text-slate-500 text-xs mt-1">Commencez à postuler aux offres</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Mon Profil -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                <div class="px-6 py-5 border-b border-slate-100 bg-gradient-to-r from-purple-600 to-indigo-600 text-white">
+                    <h3 class="font-bold text-lg flex items-center">
+                        <i class="fas fa-user mr-3"></i>
+                        Mon profil
+                    </h3>
+                </div>
+
+                <div class="p-6">
+                    <div class="text-center mb-4">
+                        <div class="inline-block w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mb-3">
+                            <i class="fas fa-user-graduate text-2xl text-white"></i>
+                        </div>
+                        <h4 class="font-bold text-slate-800">{{ user.name }}</h4>
+                        <p class="text-slate-600 text-sm">Apprenant YouCode</p>
+                    </div>
+
+                    <div class="space-y-3 border-t border-slate-200 pt-4">
+                        <div class="flex items-center">
+                            <i class="fas fa-envelope text-slate-400 mr-3"></i>
+                            <span class="text-slate-700 text-sm break-all">{{ user.email }}</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-badge-check text-blue-500 mr-3"></i>
+                            <span class="text-slate-700 text-sm font-medium">Apprenant</span>
+                        </div>
+                    </div>
+
+                    <button class="w-full mt-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:opacity-90 text-white rounded-lg text-sm font-medium transition duration-300">
+                        <i class="fas fa-edit mr-2"></i>Modifier le profil
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Include Modal -->
+    {% include "front/dashboard/modal-candidature.twig" %}
+
+{% endblock %}

@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajouter une Entreprise</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            padding: 30px;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 25px;
+            font-size: 28px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        h1 i {
+            color: #3498db;
+        }
+        
+        .add-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        
+        .add-btn:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+        
+        .hidden-section {
+            display: none;
+            background-color: #f8fafc;
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 20px;
+            border-left: 4px solid #3498db;
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .form-title {
+            color: #2c3e50;
+            margin-bottom: 25px;
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        label {
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .required {
+            color: #e74c3c;
+        }
+        
+        input, select {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+        
+        .logo-upload {
+            grid-column: 1 / -1;
+        }
+        
+        .upload-area {
+            border: 2px dashed #bdc3c7;
+            border-radius: 8px;
+            padding: 25px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background-color: #fdfdfd;
+        }
+        
+        .upload-area:hover {
+            border-color: #3498db;
+            background-color: #f0f8ff;
+        }
+        
+        .upload-icon {
+            font-size: 40px;
+            color: #3498db;
+            margin-bottom: 10px;
+        }
+        
+        .upload-text {
+            color: #7f8c8d;
+            margin-bottom: 5px;
+        }
+        
+        .upload-hint {
+            font-size: 14px;
+            color: #95a5a6;
+        }
+        
+        .form-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+            grid-column: 1 / -1;
+        }
+        
+        .submit-btn {
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+        
+        .submit-btn:hover {
+            background-color: #27ae60;
+        }
+        
+        .cancel-btn {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+        
+        .cancel-btn:hover {
+            background-color: #c0392b;
+        }
+        
+        .icon {
+            font-size: 18px;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1><i class="fas fa-building"></i> Gestion des Entreprises</h1>
+        
+        <button class="add-btn" id="addEntrepriseBtn">
+            <i class="fas fa-plus-circle"></i> Ajouter une Entreprise
+        </button>
+        
+        <div class="hidden-section" id="entrepriseSection">
+            <h2 class="form-title"><i class="fas fa-file-alt"></i> Informations de l'Entreprise</h2>
+            
+            <form id="entrepriseForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="nom"><i class="fas fa-signature"></i> Nom de l'entreprise <span class="required">*</span></label>
+                        <input type="text" id="nom" name="nom" required placeholder="Entrez le nom de l'entreprise">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="secteur"><i class="fas fa-industry"></i> Secteur d'activité <span class="required">*</span></label>
+                        <select id="secteur" name="secteur" required>
+                            <option value="">Sélectionnez un secteur</option>
+                            <option value="informatique">Informatique & Technologies</option>
+                            <option value="commerce">Commerce & Distribution</option>
+                            <option value="industrie">Industrie & Production</option>
+                            <option value="services">Services & Consulting</option>
+                            <option value="banque">Banque & Finance</option>
+                            <option value="sante">Santé & Médical</option>
+                            <option value="education">Éducation & Formation</option>
+                            <option value="autre">Autre</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="ville"><i class="fas fa-city"></i> Ville <span class="required">*</span></label>
+                        <input type="text" id="ville" name="ville" required placeholder="Entrez la ville de l'entreprise">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email"><i class="fas fa-envelope"></i> Email <span class="required">*</span></label>
+                        <input type="email" id="email" name="email" required placeholder="entreprise@exemple.com">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="telephone"><i class="fas fa-phone"></i> Téléphone <span class="required">*</span></label>
+                        <input type="tel" id="telephone" name="telephone" required placeholder="+212 6 XX XX XX XX">
+                    </div>
+                    
+                    <div class="form-group logo-upload">
+                        <label for="logo"><i class="fas fa-image"></i> Logo de l'entreprise</label>
+                        <div class="upload-area" id="logoUpload">
+                            <div class="upload-icon">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                            </div>
+                            <p class="upload-text">Cliquez pour télécharger le logo</p>
+                            <p class="upload-hint">Formats acceptés: JPG, PNG, SVG (max. 5MB)</p>
+                            <input type="file" id="logo" name="logo" accept="image/*" style="display: none;">
+                        </div>
+                    </div>
+                    
+                    <div class="form-buttons">
+                        <button type="submit" class="submit-btn">
+                            <i class="fas fa-check"></i> Enregistrer l'entreprise
+                        </button>
+                        <button type="button" class="cancel-btn" id="cancelBtn">
+                            <i class="fas fa-times"></i> Annuler
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const addBtn = document.getElementById('addEntrepriseBtn');
+            const entrepriseSection = document.getElementById('entrepriseSection');
+            const cancelBtn = document.getElementById('cancelBtn');
+            const entrepriseForm = document.getElementById('entrepriseForm');
+            const logoUpload = document.getElementById('logoUpload');
+            const logoInput = document.getElementById('logo');
+            
+            // Afficher/masquer la section au clic sur le bouton "Ajouter une Entreprise"
+            addBtn.addEventListener('click', function() {
+                if (entrepriseSection.style.display === 'block') {
+                    entrepriseSection.style.display = 'none';
+                    addBtn.innerHTML = '<i class="fas fa-plus-circle"></i> Ajouter une Entreprise';
+                } else {
+                    entrepriseSection.style.display = 'block';
+                    addBtn.innerHTML = '<i class="fas fa-eye-slash"></i> Masquer le formulaire';
+                    // Réinitialiser le formulaire
+                    entrepriseForm.reset();
+                }
+            });
+            
+            // Masquer la section au clic sur "Annuler"
+            cancelBtn.addEventListener('click', function() {
+                entrepriseSection.style.display = 'none';
+                addBtn.innerHTML = '<i class="fas fa-plus-circle"></i> Ajouter une Entreprise';
+                entrepriseForm.reset();
+            });
+            
+            // Gérer l'upload du logo
+            logoUpload.addEventListener('click', function() {
+                logoInput.click();
+            });
+            
+            logoInput.addEventListener('change', function() {
+                if (this.files && this.files[0]) {
+                    const fileName = this.files[0].name;
+                    logoUpload.innerHTML = `
+                        <div class="upload-icon">
+                            <i class="fas fa-file-image"></i>
+                        </div>
+                        <p class="upload-text">${fileName}</p>
+                        <p class="upload-hint">Logo sélectionné</p>
+                    `;
+                }
+            });
+            
+            // Soumission du formulaire
+            entrepriseForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Récupérer les valeurs du formulaire
+                const nom = document.getElementById('nom').value;
+                const secteur = document.getElementById('secteur').value;
+                const ville = document.getElementById('ville').value;
+                const email = document.getElementById('email').value;
+                const telephone = document.getElementById('telephone').value;
+                
+                // Ici, vous pouvez ajouter le code pour envoyer les données à votre backend
+                // Par exemple, via fetch() ou XMLHttpRequest
+                
+                // Pour l'instant, affichons les données dans la console
+                console.log('Nouvelle entreprise ajoutée:');
+                console.log('Nom:', nom);
+                console.log('Secteur:', secteur);
+                console.log('Ville:', ville);
+                console.log('Email:', email);
+                console.log('Téléphone:', telephone);
+                console.log('Logo:', logoInput.files[0] ? logoInput.files[0].name : 'Aucun logo sélectionné');
+                
+                // Afficher un message de succès
+                alert(`Entreprise "${nom}" ajoutée avec succès !`);
+                
+                // Masquer le formulaire et réinitialiser
+                entrepriseSection.style.display = 'none';
+                addBtn.innerHTML = '<i class="fas fa-plus-circle"></i> Ajouter une Entreprise';
+                entrepriseForm.reset();
+                
+                // Réinitialiser l'area d'upload
+                logoUpload.innerHTML = `
+                    <div class="upload-icon">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                    </div>
+                    <p class="upload-text">Cliquez pour télécharger le logo</p>
+                    <p class="upload-hint">Formats acceptés: JPG, PNG, SVG (max. 5MB)</p>
+                `;
+            });
+            
+            // Animation pour le bouton d'ajout
+            addBtn.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-2px)';
+            });
+            
+            addBtn.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+    </script>
+</body>
+</html>

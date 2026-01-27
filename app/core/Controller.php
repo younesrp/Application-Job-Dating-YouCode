@@ -1,10 +1,14 @@
 <?php
 
-namespace App\app\core;
-use App\app\core\{View,Validator,Security,Session}; // ✅ Validator
-class BaseController
-{
+namespace App\core;
+use App\core\{View,Validator,Security,Session};
 
+
+
+
+
+class Controller
+{
     protected $view;
     protected $security;
     protected $session;
@@ -12,34 +16,44 @@ class BaseController
 
     public function __construct()
     {
-        $this->view = new View();
+        // هنا قمنا بإنشاء Instance من View
+        $this->view = new View(); 
         $this->security = new Security();
         $this->session = Session::getInstance();
         $this->validator = new Validator();
     }
 
+    /**
+     * دالة لعرض صفحات Twig
+     */
+    protected function render(string $view, array $data = []): void
+    {
+        // ✅ التصحيح: نستعمل $this->view لأنها ليست Static
+        $this->view->render($view, $data); 
+    }
+
+    /**
+     * دالة لعرض صفحات PHP العادية (Legacy)
+     */
     protected function view(string $view, array $data = [])
     {
         extract($data);
 
-        $viewPath = __DIR__ . '/../views/' . $view . '.php';
+        $viewPath = __DIR__ . '/../views/' . $view . '.twig';
 
         if (!file_exists($viewPath)) {
             die("View not found: {$viewPath}");
         }
-
         require $viewPath;
     }
 
-     protected function json(array $data, int $statusCode = 200)
+    protected function json(array $data, int $statusCode = 200)
     {
         http_response_code($statusCode);
         header('Content-Type: application/json');
         echo json_encode($data);
         exit;
     }
-
-    //return $this->redirect('/dashboard');
 
     protected function redirect(string $url, int $statusCode = 302)
     {
@@ -48,19 +62,10 @@ class BaseController
         exit;
     }
 
-    protected function render(string $view, array $data = []): void
-    {
-        View::render($view, $data); // ✅ View of Twig
-    }
     protected function verifyCsrf()
     {
         if (!$this->security->verifyCsrfToken($_POST['_token'] ?? '')) {
             $this->json(['error' => 'Invalid CSRF token'], 403);
-            // http_response_code(403);
         }
     }
-
-
-
-
 }

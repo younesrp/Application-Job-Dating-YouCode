@@ -1,6 +1,6 @@
 <?php
 
-namespace App\app\core;
+namespace App\core;
 
 class Session
 {
@@ -78,6 +78,14 @@ class Session
         }
 
         $this->set("flash_{$key}", $value);
+    }
+
+    /**
+     * Récupère un flash message (alias pour flash)
+     */
+    public function getFlash(string $key)
+    {
+        return $this->flash($key);
     }
 
     /**

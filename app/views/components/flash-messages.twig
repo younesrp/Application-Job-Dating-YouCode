@@ -1,0 +1,64 @@
+<!-- Messages de succès et d'erreur -->
+<div id="alertContainer" class="fixed top-6 right-6 z-50 space-y-3"></div>
+
+<script>
+function showAlert(message, type = 'success') {
+    const container = document.getElementById('alertContainer');
+    
+    const colors = {
+        success: 'bg-green-100 border-green-500 text-green-700',
+        error: 'bg-red-100 border-red-500 text-red-700',
+        warning: 'bg-yellow-100 border-yellow-500 text-yellow-700',
+        info: 'bg-blue-100 border-blue-500 text-blue-700'
+    };
+    
+    const icons = {
+        success: 'fas fa-check-circle',
+        error: 'fas fa-exclamation-circle',
+        warning: 'fas fa-exclamation-triangle',
+        info: 'fas fa-info-circle'
+    };
+    
+    const alert = document.createElement('div');
+    alert.className = `${colors[type] || colors.info} border rounded-lg p-4 shadow-lg flex items-start gap-3 max-w-md animate-in fade-in slide-in-from-right`;
+    alert.innerHTML = `
+        <i class="${icons[type] || icons.info} text-lg flex-shrink-0"></i>
+        <div class="flex-1">
+            <p class="font-semibold text-sm">${message}</p>
+        </div>
+        <button onclick="this.parentElement.remove()" class="text-xl hover:opacity-70 transition">×</button>
+    `;
+    
+    container.appendChild(alert);
+    
+    // Auto-remove after 5 seconds
+    setTimeout(() => {
+        alert.style.animation = 'fadeOut 0.3s ease-out';
+        setTimeout(() => alert.remove(), 300);
+    }, 5000);
+}
+
+// Display flash messages from PHP session
+{% if flash_success %}
+showAlert("{{ flash_success }}", 'success');
+{% endif %}
+
+{% if flash_error %}
+showAlert("{{ flash_error }}", 'error');
+{% endif %}
+
+{% if flash_warning %}
+showAlert("{{ flash_warning }}", 'warning');
+{% endif %}
+
+{% for message in flash_errors %}
+showAlert("{{ message }}", 'error');
+{% endfor %}
+</script>
+
+<style>
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+</style>

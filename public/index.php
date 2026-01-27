@@ -1,27 +1,45 @@
 <?php
+ini_set('memory_limit', '256M');
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
-// root dyal projet: AppJobDating
-//define('BASE_PATH', dirname(__DIR__));
+require_once __DIR__ . '/../vendor/autoload.php';
 
-// composer autoload
-require_once __DIR__ . '/../../vendor/autoload.php';
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
+$dotenv->load();
 
-use App\app\core\Router;
-use App\app\controllers\AuthController;
-use App\app\Middlewares\{Middleware, AuthMiddleware,EtudiantMiddleware, AdminMiddleware};
+use App\core\Router;
+use App\controllers\front\AuthController;
+use App\controllers\front\CandidatureController;
+use App\controllers\front\DashboardController as FrontDashboardController;
+use App\controllers\front\JobController;
+use App\Middlewares\{ApprenantMiddleware};
+
 $router = new Router();
 
-/**
- * Routes
- */
+require_once __DIR__ . '/../config/routes.php';
 
-$router->get('/dashboard', [AuthController::class, 'dashboard'], [EtudiantMiddleware::class]);
-$router->post('/dashboard', [AuthController::class, 'dashboard'], [EtudiantMiddleware::class]);
-$router->get('/login', [AuthController::class, 'showLogin'], [Middleware::class]);
-$router->post('/login', [AuthController::class, 'login'], [Middleware::class]);
-$router->get('/register', [AuthController::class, 'showRegister'], [Middleware::class]);
-$router->post('/register', [AuthController::class, 'register'], [Middleware::class]);
+// Routes publiques
+$router->get('/login', [AuthController::class, 'showLogin']);
+$router->post('/login', [AuthController::class, 'login']);
+$router->get('/register', [AuthController::class, 'showRegister']);
+$router->post('/register', [AuthController::class, 'register']);
+$router->get('/logout', [AuthController::class, 'logout']);
 
-// dispatch request
-$controleur = $router->dispatch();
-//addRoute('dashboard', 'GET', $action);
+// Routes apprenants
+$router->get('/dashboard', [FrontDashboardController::class, 'index'], [ApprenantMiddleware::class]);
+$router->post('/candidature', [CandidatureController::class, 'apply'], [ApprenantMiddleware::class]);
+$router->get('/candidatures', [FrontDashboardController::class, 'candidatures'], [ApprenantMiddleware::class]);
+$router->get('/profil', [FrontDashboardController::class, 'profil'], [ApprenantMiddleware::class]);
+$router->post('/profil/update', [FrontDashboardController::class, 'updateProfil'], [ApprenantMiddleware::class]);
+$router->get('/offres', [JobController::class, 'index'], [ApprenantMiddleware::class]);
+$router->post('/api/search', [JobController::class, 'search'], [ApprenantMiddleware::class]);
+$router->get('/offres/{id}', [FrontDashboardController::class, 'detailOffre'], [ApprenantMiddleware::class]);
+
+// Route racine
+$router->get('/', function() {
+    header('Location: /login');
+    exit();
+});
+
+$router->dispatch();
